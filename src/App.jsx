@@ -52,7 +52,7 @@ const projects = [
     category: 'Booking Platform',
     stack: ['Next.js', 'React', 'Node.js', 'MongoDB', 'Vercel'],
     featured: true,
-    previewImage: `${import.meta.env.BASE_URL}planify-preview.png`,
+    previewImage: '/planify-preview.png',
     previewAlt: 'Planify business analytics dashboard preview',
     previewPosition: '48% 8%',
     highlights: [
