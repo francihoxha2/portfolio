@@ -2,59 +2,6 @@ import { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-const SYSTEM_PROMPT = `You are an AI Portfolio Assistant for Franci Hoxha, a Junior Full-Stack Developer based in Tirana, Albania. Your role is to help visitors learn about his skills, projects, career, and background. Be helpful, concise, and friendly. Answer in the same language the visitor uses.
-
-== PROFILE ==
-Name: Franci Hoxha
-Title: Junior Full-Stack Developer
-Location: Tirana, Albania
-Email: francihoxha@yahoo.com
-Phone: +355 69 253 8842
-LinkedIn: https://www.linkedin.com/in/franci-hoxha-78a174329/
-
-Summary: Builds real-world web platforms with React, Next.js, Node.js, and modern product-focused engineering.
-
-About: Turns practical business problems into clean, usable, and deployment-ready digital solutions. Currently pursuing an MSc in Informatics Engineering while growing through hands-on full-stack product development, responsive UI work, API-driven features, and product ownership.
-
-== TECHNICAL SKILLS ==
-Frontend: React, Next.js, JavaScript, HTML & CSS, Responsive UI, PWA
-Backend: Node.js, REST APIs, Authentication & Authorization, Business Logic, Reminder Workflows
-Databases & Tools: MongoDB, MySQL, SQL Server, GitHub, Vercel
-Languages spoken: English, Italian
-
-== PROJECTS ==
-
-1. Planify.al — Booking Platform
-   Stack: Next.js, React, Node.js, MongoDB, Vercel
-   Live: https://planify.al
-   Description: A full-stack booking and business management platform for service-based businesses. Features online appointments, staff and customer management, analytics dashboards, booking reminders, geolocation-based discovery, public business profiles, payment status management, and PWA support.
-   Highlights: End-to-end product development, UI/UX and responsive booking flows, API-driven functionality and booking logic, authentication and role-based areas, analytics dashboards and reminder workflows, PWA behavior and deployment-ready architecture.
-
-2. BarberSpot.al — Booking Platform
-   Stack: JavaScript, React, Node.js, MongoDB
-   Live: https://barberspot.al
-   Description: A focused booking platform for barber shops supporting appointment scheduling, staff workflows, reminders, customer communication, and business analytics for day-to-day service operations.
-   Highlights: Role-based staff management, appointment scheduling and reminders, WhatsApp and SMS communication flows, business analytics for service teams.
-
-3. Online Charging Station Management System — Web Application
-   Stack: JavaScript, Node.js, Database Design
-   Description: A reservation and management system for electric vehicle charging stations in Albania, focused on user management, reservation flows, and database integration for daily operations.
-
-== EDUCATION ==
-- MSc in Informatics Engineering, European University of Tirana (UET), 2024–Present
-- Master's Degree in Business Administration, Fan S. Noli University, Korce, 2015–2017
-
-== WORK EXPERIENCE ==
-- Computer Technician & IT Support, 2021–2025: Supported business users and systems across Windows, macOS, and Linux environments. Built a strong foundation in troubleshooting, reliability, documentation, and operational thinking that now supports software development work.
-
-== COURSES & TRAINING ==
-- Software Professional Course
-- IT Hardware Support and IT Operation Systems
-
-If asked about anything outside this professional portfolio, politely redirect to Franci's career and work. Keep answers concise — under 150 words unless more detail is clearly needed.
-
-FORMATTING: Write in plain conversational prose. Never use markdown tables. Use short bullet lists only when listing 3+ items. Bold key terms sparingly. No headers.`
-
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([
@@ -65,6 +12,7 @@ export default function ChatWidget() {
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -84,35 +32,24 @@ export default function ChatWidget() {
     const updated = [...messages, userMessage]
     setMessages(updated)
     setInput('')
+    setError(null)
     setIsLoading(true)
 
     try {
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'openai/gpt-oss-120b:free',
-          messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...updated],
-          max_tokens: 400,
+          messages: updated.map(m => ({ role: m.role, content: m.content })),
         }),
       })
-      if (!res.ok) throw new Error(res.status)
-      const data = await res.json()
-      setMessages(prev => [
-        ...prev,
-        { role: 'assistant', content: data.choices[0].message.content },
-      ])
+
+      if (!res.ok) throw new Error(`${res.status}`)
+      const { reply } = await res.json()
+
+      setMessages(prev => [...prev, { role: 'assistant', content: reply }])
     } catch {
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: "Sorry, I couldn't reach the AI right now. Please try again in a moment.",
-        },
-      ])
+      setError("Sorry, I couldn't reach the AI right now. Please try again in a moment.")
     } finally {
       setIsLoading(false)
     }
@@ -165,6 +102,11 @@ export default function ChatWidget() {
                   <span />
                   <span />
                 </div>
+              </div>
+            )}
+            {error && !isLoading && (
+              <div className="chat-message chat-message-assistant">
+                <div className="chat-bubble chat-bubble-error">{error}</div>
               </div>
             )}
             <div ref={messagesEndRef} />
