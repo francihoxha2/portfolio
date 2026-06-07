@@ -1,3 +1,5 @@
+import AiChat from './components/AiChat'
+import ChatWidget from './components/ChatWidget'
 import Contact from './components/Contact'
 import Education from './components/Education'
 import Footer from './components/Footer'
@@ -123,6 +125,7 @@ const sections = [
   { label: 'Skills', href: '#skills' },
   { label: 'Education', href: '#education' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Ask AI', href: '#ai-chat' },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -140,10 +143,12 @@ function App() {
           courses={courses}
         />
         <Projects projects={projects} />
+        <AiChat />
         <Contact profile={profile} />
       </main>
 
       <Footer name={profile.name} />
+      <ChatWidget />
     </div>
   )
 }
