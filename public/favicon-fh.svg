@@ -1,13 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="18" fill="#152528"/>
-  <rect x="3" y="3" width="58" height="58" rx="16" fill="none" stroke="#f1a464" stroke-width="4"/>
-  <text
-    x="32"
-    y="39"
-    fill="#f3ede3"
-    font-family="Georgia, 'Palatino Linotype', serif"
-    font-size="24"
-    font-weight="700"
-    text-anchor="middle"
-  >FH</text>
+  <rect width="64" height="64" rx="18" fill="#152528"></rect>
+  <rect x="3" y="3" width="58" height="58" rx="16" fill="none" stroke="#f1a464" stroke-width="4"></rect>
+  <text x="32" y="39" fill="#f3ede3" font-family="Georgia, &#39;Palatino Linotype&#39;, serif" font-size="24" font-weight="700" text-anchor="middle">FH</text>
 </svg>

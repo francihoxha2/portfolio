@@ -63,13 +63,53 @@ export default function AiChat() {
 
   return (
     <section id="ai-chat" className="section">
-      <div className="section-intro">
+      <div className="section-head">
         <p className="eyebrow">AI Assistant</p>
-        <h2>Ask About My Work</h2>
-        <p>Have a question about my skills, projects, or background? Ask the AI assistant below.</p>
+        <h2>Ask about my work</h2>
+        <p>
+          A built-in assistant that answers recruiter questions about my skills,
+          projects, and background — instantly, in your language.
+        </p>
       </div>
 
-      <div className="ai-section-panel panel">
+      <div className="ai-shell">
+        <div className="ai-intro">
+          <h3>Skip the back-and-forth</h3>
+          <p style={{ marginTop: '0.6rem' }}>
+            Ask anything you&rsquo;d normally email about. It only answers from my
+            real profile — no invented details.
+          </p>
+          <div className="ai-points">
+            <div className="ai-point">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              Skills, stack, and project details
+            </div>
+            <div className="ai-point">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              Education and work background
+            </div>
+            <div className="ai-point">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              Availability for roles &amp; contact
+            </div>
+            <div className="ai-point">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              Replies in English or Albanian
+            </div>
+          </div>
+        </div>
+
+        <div className="ai-section-panel">
+          <div className="ai-panel-head">
+            <div className="chat-avatar">AI</div>
+            <div style={{ flex: 1 }}>
+              <div className="title">Portfolio Assistant</div>
+              <div className="status">
+                <span className="dot"></span>
+                Online · answers about Franci
+              </div>
+            </div>
+          </div>
         {isEmpty ? (
           <div className="ai-section-empty">
             <div className="ai-section-empty-icon" aria-hidden="true">
@@ -156,6 +196,7 @@ export default function AiChat() {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </section>
   )

@@ -41,6 +41,16 @@ const skillGroups = [
     title: 'Databases & Tools',
     items: ['MongoDB', 'MySQL', 'SQL Server', 'GitHub', 'Vercel'],
   },
+  {
+    title: 'Product & Delivery',
+    items: [
+      'SaaS thinking',
+      'Booking workflows',
+      'Role-based dashboards',
+      'Responsive product UI',
+      'Deployment',
+    ],
+  },
 ]
 
 const projects = [
@@ -122,9 +132,9 @@ const languages = ['English', 'Italian']
 
 const sections = [
   { label: 'About', href: '#about' },
+  { label: 'Projects', href: '#projects' },
   { label: 'Skills', href: '#skills' },
   { label: 'Education', href: '#education' },
-  { label: 'Projects', href: '#projects' },
   { label: 'Ask AI', href: '#ai-chat' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -136,18 +146,18 @@ function App() {
 
       <main className="page-content">
         <Hero profile={profile} />
+        <Projects projects={projects} />
         <Skills skillGroups={skillGroups} languages={languages} />
         <Education
           education={education}
           experience={experience}
           courses={courses}
         />
-        <Projects projects={projects} />
         <AiChat />
         <Contact profile={profile} />
       </main>
 
-      <Footer name={profile.name} />
+      <Footer profile={profile} sections={sections} />
       <ChatWidget />
     </div>
   )
