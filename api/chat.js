@@ -8,8 +8,11 @@
  *   Environment: Production (and Preview if needed)
  */
 
+const OPENROUTER_MODEL = 'openai/gpt-oss-20b:free'
+
 const ALLOWED_ORIGINS = [
   'https://francihoxha.github.io',
+  'https://portfolio-azure-nu-94.vercel.app',
   'http://localhost:5173',
   'http://localhost:5174',
 ]
@@ -119,7 +122,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-120b:free',
+        model: OPENROUTER_MODEL,
         temperature: 0.4,
         max_tokens: 300,
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...sanitised],
@@ -127,6 +130,29 @@ export default async function handler(req, res) {
     })
 
     if (!upstream.ok) {
+      let upstreamBody = ''
+      try {
+        upstreamBody = await upstream.text()
+      } catch {
+        upstreamBody = '(could not read body)'
+      }
+
+      let upstreamMessage = upstreamBody
+      try {
+        const parsed = JSON.parse(upstreamBody)
+        upstreamMessage =
+          parsed?.error?.message ?? parsed?.message ?? upstreamBody
+      } catch {
+        /* keep raw text */
+      }
+
+      console.error('[chat] OpenRouter error', {
+        status: upstream.status,
+        statusText: upstream.statusText,
+        model: OPENROUTER_MODEL,
+        message: String(upstreamMessage).slice(0, 500),
+      })
+
       return res.status(502).json({ error: 'AI service unavailable' })
     }
 
@@ -134,7 +160,10 @@ export default async function handler(req, res) {
     const reply = data.choices?.[0]?.message?.content ?? ''
 
     return res.status(200).json({ reply })
-  } catch {
+  } catch (err) {
+    console.error('[chat] handler failed', {
+      message: err instanceof Error ? err.message : String(err),
+    })
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
