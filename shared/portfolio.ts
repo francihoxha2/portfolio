@@ -35,11 +35,16 @@ const portfolioData = {
       'Franci Hoxha is a Full-Stack Software Developer building modern web, mobile, backend, and AI-integrated software experiences.',
   },
   navigation: [
-    { id: 'about', label: 'About', href: '#about', status: 'published' },
-    { id: 'projects', label: 'Projects', href: '#projects', status: 'published' },
-    { id: 'skills', label: 'Skills', href: '#skills', status: 'published' },
-    { id: 'education', label: 'Education', href: '#education', status: 'published' },
-    { id: 'ai-chat', label: 'Ask AI', href: '#ai-chat', status: 'published' },
+    { id: 'work', label: 'Work', href: '#work', status: 'published' },
+    { id: 'stack', label: 'Stack', href: '#stack', status: 'published' },
+    { id: 'journey', label: 'Journey', href: '#journey', status: 'published' },
+    {
+      id: 'credentials',
+      label: 'Credentials',
+      href: '#credentials',
+      status: 'published',
+    },
+    { id: 'ai', label: 'Ask AI', href: '#ai', status: 'published' },
     { id: 'contact', label: 'Contact', href: '#contact', status: 'published' },
   ],
   contact: [
@@ -239,7 +244,7 @@ const portfolioData = {
     },
     {
       id: 'secondary',
-      title: 'Secondary',
+      title: 'Additional Engineering Language',
       status: 'published',
       items: [
         {
@@ -255,14 +260,6 @@ const portfolioData = {
   ],
   journey: [
     {
-      id: 'masters',
-      kind: 'education',
-      period: 'Completed July 2026',
-      title: 'Master’s degree',
-      status: 'published',
-      verificationStatus: 'confirmed',
-    },
-    {
       id: 'business-education',
       kind: 'education',
       title: 'Business Administration studies',
@@ -276,6 +273,14 @@ const portfolioData = {
       title: 'Computer Technician & IT Support',
       description:
         'Supported users and systems across Windows, macOS, and Linux while developing practical troubleshooting, reliability, documentation, and operational skills.',
+      status: 'published',
+      verificationStatus: 'confirmed',
+    },
+    {
+      id: 'masters',
+      kind: 'education',
+      period: 'Completed July 2026',
+      title: 'Master’s degree',
       status: 'published',
       verificationStatus: 'confirmed',
     },

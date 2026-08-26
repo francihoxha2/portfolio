@@ -1,0 +1,63 @@
+:root,
+.app-shell {
+  --color-bg-0: #050508;
+  --color-bg-1: #080a12;
+  --color-surface-1: #0d1019;
+  --color-surface-glass: rgba(15, 18, 29, 0.88);
+  --color-text: #f3f5fa;
+  --color-text-muted: #a4acc0;
+  --color-text-subtle: #717a90;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.18);
+  --color-accent-violet: #8270ff;
+  --color-accent-blue: #4c9aff;
+  --color-accent-cyan: #5ddde6;
+  --color-success: #39c98a;
+  --color-warning: #e7ad55;
+  --color-danger: #ef6a7a;
+
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', sans-serif;
+  --font-body: 'Geist Variable', 'Geist', system-ui, sans-serif;
+  --font-system: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --space-7: 6rem;
+  --space-8: 8rem;
+
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --content-width: 78rem;
+  --text-width: 66ch;
+  --header-height: 4.75rem;
+  --shadow-surface: 0 24px 70px -42px rgba(0, 0, 0, 0.9);
+  --focus-ring: #9adfe7;
+
+  /* Compatibility aliases for the deferred legacy AI surfaces. */
+  --bg: var(--color-bg-0);
+  --text: var(--color-text);
+  --text-soft: var(--color-text-muted);
+  --text-mute: #8d96aa;
+  --surface: rgba(255, 255, 255, 0.025);
+  --surface-2: rgba(255, 255, 255, 0.055);
+  --surface-solid: var(--color-surface-1);
+  --border: var(--color-border);
+  --border-strong: var(--color-border-strong);
+  --primary: var(--color-accent-violet);
+  --primary-bright: #a398ff;
+  --primary-deep: #6251e2;
+  --primary-ink: var(--color-bg-0);
+  --primary-soft: rgba(130, 112, 255, 0.13);
+  --primary-glow: rgba(130, 112, 255, 0.32);
+  --cyan: var(--color-accent-cyan);
+  --amber: var(--color-warning);
+  --live: var(--color-success);
+  --ring: 0 0 0 1px var(--color-border);
+  --shadow-card: var(--shadow-surface);
+  --shadow-pop: 0 34px 90px -46px rgba(0, 0, 0, 0.95);
+}

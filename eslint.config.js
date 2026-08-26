@@ -28,7 +28,35 @@ export default defineConfig([
     },
   },
   {
-    files: ['api/**/*.js', 'tests/**/*.js', 'vite.config.js'],
+    files: ['src/**/*.{ts,tsx}', 'tests/components/**/*.tsx'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      parser: tseslint.parser,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    files: [
+      'api/**/*.js',
+      'tests/**/*.js',
+      'scripts/**/*.mjs',
+      'vite.config.js',
+      'vitest.config.js',
+      'playwright.config.ts',
+    ],
     extends: [js.configs.recommended],
     languageOptions: {
       ecmaVersion: 'latest',
@@ -54,6 +82,12 @@ export default defineConfig([
     rules: {
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    files: ['tests/e2e/**/*.ts'],
+    languageOptions: {
+      globals: { ...globals.node, ...globals.browser },
     },
   },
 ])

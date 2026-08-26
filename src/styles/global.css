@@ -1,0 +1,105 @@
+:root {
+  font-family: var(--font-body);
+  font-size: 100%;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-bg-0);
+}
+
+body,
+button,
+input,
+textarea {
+  font-family: var(--font-body);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  color: var(--color-text-muted);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-variation-settings: 'wght' 620;
+  letter-spacing: -0.035em;
+}
+
+h1 {
+  max-width: 18ch;
+  font-size: clamp(2.75rem, 6vw, 5.75rem);
+  line-height: 0.98;
+}
+
+h2 {
+  font-size: clamp(2.1rem, 4.6vw, 4.25rem);
+  line-height: 1.02;
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  line-height: 1.15;
+}
+
+::selection {
+  color: var(--color-text);
+  background: rgba(130, 112, 255, 0.42);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 4px;
+}
+
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 80% 6%, rgba(130, 112, 255, 0.16), transparent 31rem),
+    radial-gradient(circle at 8% 18%, rgba(93, 221, 230, 0.08), transparent 27rem),
+    linear-gradient(180deg, var(--color-bg-1), var(--color-bg-0) 32rem);
+}
+
+.app-shell::before {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  mask-image: linear-gradient(to bottom, #000, transparent 72%);
+}
+
+.page-content,
+.site-footer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: 0;
+}
+
+.page-content {
+  padding: 0;
+}
+
+.portfolio-section,
+.section.portfolio-section {
+  scroll-margin-top: calc(var(--header-height) + var(--space-2));
+}

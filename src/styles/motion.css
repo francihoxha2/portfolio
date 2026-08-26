@@ -1,0 +1,30 @@
+@media (hover: hover) {
+  .button,
+  .text-link,
+  .site-nav__link,
+  .site-brand,
+  .contact-item a,
+  .site-footer a {
+    transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease,
+      text-decoration-color 160ms ease, transform 160ms ease;
+  }
+
+  .button:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

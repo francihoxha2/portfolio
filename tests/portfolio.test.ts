@@ -40,6 +40,20 @@ describe('canonical portfolio data', () => {
     }
   })
 
+  it('keeps Java visible as a confirmed secondary capability', () => {
+    const java = portfolio.capabilityGroups
+      .flatMap((group) => group.items)
+      .find((item) => item.id === 'java')
+
+    expect(java).toMatchObject({
+      label: 'Java',
+      prominence: 'secondary',
+      status: 'published',
+      verificationStatus: 'confirmed',
+    })
+    expect(java?.evidence).toBeUndefined()
+  })
+
   it('rejects stale claims if they enter published data', () => {
     const invalid = structuredClone(portfolio) as PortfolioData
     invalid.projects[0].description = 'Uses Polar for payments.'

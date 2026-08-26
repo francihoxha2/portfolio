@@ -1,12 +1,14 @@
 import AiChat from './components/AiChat'
 import ChatWidget from './components/ChatWidget'
-import Contact from './components/Contact'
-import Education from './components/Education'
-import Footer from './components/Footer'
-import Hero from './components/Hero'
-import Navbar from './components/Navbar'
-import Projects from './components/Projects'
-import Skills from './components/Skills'
+import SiteHeader from './components/navigation/SiteHeader'
+import ContactSection from './sections/ContactSection'
+import CredentialsSection from './sections/CredentialsSection'
+import EngineeringStackSection from './sections/EngineeringStackSection'
+import HeroSection from './sections/HeroSection'
+import JourneySection from './sections/JourneySection'
+import PlanifySection from './sections/PlanifySection'
+import SelectedWorkSection from './sections/SelectedWorkSection'
+import SiteFooter from './sections/SiteFooter'
 import { portfolio } from '../shared/portfolio.ts'
 
 const published = (item) => item.status === 'published'
@@ -15,12 +17,6 @@ const assetsById = Object.fromEntries(
   portfolio.assets
     .filter((asset) => asset.status === 'available')
     .map((asset) => [asset.id, asset]),
-)
-
-const contactsById = Object.fromEntries(
-  portfolio.contact
-    .filter((channel) => channel.public && published(channel))
-    .map((channel) => [channel.id, channel]),
 )
 
 const projects = portfolio.projects.filter(published).map((project) => {
@@ -32,49 +28,45 @@ const projects = portfolio.projects.filter(published).map((project) => {
     ...project,
     previewImage: preview?.src,
     previewAlt: preview?.alt,
+    previewWidth: preview?.width,
+    previewHeight: preview?.height,
   }
 })
 
-const skillGroups = portfolio.capabilityGroups
+const featuredProject = projects.find((project) => project.featured)
+const selectedProjects = projects.filter((project) => !project.featured)
+const capabilityGroups = portfolio.capabilityGroups
   .filter(published)
   .map((group) => ({
     ...group,
     items: group.items.filter(published),
   }))
-
-const featuredTechnologies = skillGroups.flatMap((group) =>
-  group.items.filter((item) => item.featured).map((item) => item.label),
-)
-
 const navigation = portfolio.navigation.filter(published)
 const journey = portfolio.journey.filter(published)
-const languages = portfolio.languages.filter(published)
+const credentials = portfolio.credentials.filter(published)
+const contacts = portfolio.contact.filter(
+  (channel) => channel.public && published(channel),
+)
 const cvPath = assetsById.cv.src
 
 function App() {
   return (
     <div className="app-shell">
-      <Navbar
-        identity={portfolio.identity}
-        sections={navigation}
-        cvPath={cvPath}
-      />
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <SiteHeader identity={portfolio.identity} sections={navigation} cvPath={cvPath} />
 
-      <main className="page-content">
-        <Hero
-          identity={portfolio.identity}
-          contacts={contactsById}
-          cvPath={cvPath}
-          featuredTechnologies={featuredTechnologies}
-        />
-        <Projects projects={projects} />
-        <Skills skillGroups={skillGroups} languages={languages} />
-        <Education journey={journey} />
+      <main id="main-content" className="page-content" tabIndex={-1}>
+        <HeroSection identity={portfolio.identity} cvPath={cvPath} />
+        <PlanifySection project={featuredProject} />
+        <SelectedWorkSection projects={selectedProjects} />
+        <EngineeringStackSection capabilityGroups={capabilityGroups} />
+        <JourneySection journey={journey} />
+        <CredentialsSection credentials={credentials} />
         <AiChat suggestions={portfolio.assistant.suggestedQuestions} />
-        <Contact contacts={contactsById} />
+        <ContactSection contacts={contacts} />
       </main>
 
-      <Footer identity={portfolio.identity} sections={navigation} />
+      <SiteFooter identity={portfolio.identity} sections={navigation} />
       <ChatWidget name={portfolio.identity.name} />
     </div>
   )

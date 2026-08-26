@@ -55,10 +55,10 @@ export default function AiChat({ suggestions }) {
   const isEmpty = messages.length === 0
 
   return (
-    <section id="ai-chat" className="section">
+    <section id="ai" className="section portfolio-section ai-section" aria-labelledby="ai-title">
       <div className="section-head">
         <p className="eyebrow">AI Assistant</p>
-        <h2>Ask about my work</h2>
+        <h2 id="ai-title">Ask about my work</h2>
         <p>
           A built-in assistant that answers recruiter questions about my skills,
           projects, and background — instantly, in your language.
