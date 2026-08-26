@@ -68,7 +68,7 @@ for (const viewport of [
     await page.goto('/')
 
     for (const name of ['Explore My Work', 'Ask My AI', 'Download CV']) {
-      const action = page.locator('.hero-section__actions').getByRole('link', { name })
+      const action = page.locator('.hero-section__actions').getByText(name, { exact: true })
       const box = await action.boundingBox()
       expect(box).not.toBeNull()
       expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(viewport.height)

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { OPEN_PORTFOLIO_ASSISTANT_EVENT } from '../hooks/useAssistantLauncher.ts'
 
 export default function ChatWidget({ name }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -13,6 +14,7 @@ export default function ChatWidget({ name }) {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [heroActionsVisible, setHeroActionsVisible] = useState(true)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -23,6 +25,28 @@ export default function ChatWidget({ name }) {
   useEffect(() => {
     if (isOpen) inputRef.current?.focus()
   }, [isOpen])
+
+  useEffect(() => {
+    const openAssistant = () => setIsOpen(true)
+
+    window.addEventListener(OPEN_PORTFOLIO_ASSISTANT_EVENT, openAssistant)
+    return () => window.removeEventListener(OPEN_PORTFOLIO_ASSISTANT_EVENT, openAssistant)
+  }, [])
+
+  useEffect(() => {
+    const heroActions = document.querySelector('.hero-section__actions')
+    if (!heroActions || !('IntersectionObserver' in window)) {
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroActionsVisible(entry.isIntersecting),
+      { threshold: 0.1 },
+    )
+    observer.observe(heroActions)
+
+    return () => observer.disconnect()
+  }, [])
 
   async function sendMessage() {
     const text = input.trim()
@@ -65,7 +89,12 @@ export default function ChatWidget({ name }) {
   return (
     <div className="chat-widget">
       {isOpen && (
-        <div className="chat-panel" role="dialog" aria-label="AI Portfolio Assistant">
+        <div
+          id="portfolio-assistant-dialog"
+          className="chat-panel"
+          role="dialog"
+          aria-label="AI Portfolio Assistant"
+        >
           <div className="chat-header">
             <div className="chat-header-info">
               <div className="chat-avatar">AI</div>
@@ -136,10 +165,12 @@ export default function ChatWidget({ name }) {
       )}
 
       <button
-        className="chat-fab"
+        className={`chat-fab${heroActionsVisible && !isOpen ? ' chat-fab--deferred' : ''}`}
         onClick={() => setIsOpen(o => !o)}
         aria-label={isOpen ? 'Close AI assistant' : 'Open AI Portfolio Assistant'}
         aria-expanded={isOpen}
+        aria-controls="portfolio-assistant-dialog"
+        aria-haspopup="dialog"
       >
         {isOpen ? (
           <>

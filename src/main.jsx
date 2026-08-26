@@ -7,6 +7,7 @@ import './styles/tokens.css'
 import './styles/reset.css'
 import './styles/global.css'
 import './styles/utilities.css'
+import './styles/hero.css'
 import './styles/motion.css'
 import App from './App.jsx'
 

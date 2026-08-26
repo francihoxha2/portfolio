@@ -25,12 +25,25 @@ async function waitForServer() {
   for (let attempt = 0; attempt < 100; attempt += 1) {
     if (await isReady()) return
     if (server?.exitCode !== null) {
-      throw new Error(`Vite exited before the test server was ready (${server?.exitCode}).`)
+      throw new Error(`Vite preview exited before the test server was ready (${server?.exitCode}).`)
     }
     await delay(200)
   }
 
-  throw new Error('Timed out waiting for the Phase 1 test server.')
+  throw new Error('Timed out waiting for the portfolio preview server.')
+}
+
+async function buildForPreview() {
+  const build = spawn(
+    process.execPath,
+    [join(root, 'node_modules', 'vite', 'bin', 'vite.js'), 'build'],
+    { cwd: root, stdio: 'inherit', windowsHide: true },
+  )
+  const [exitCode] = await once(build, 'exit')
+
+  if (exitCode !== 0) {
+    throw new Error(`Production build failed before browser tests (${exitCode}).`)
+  }
 }
 
 async function stopServer() {
@@ -41,10 +54,12 @@ async function stopServer() {
 
 try {
   if (!(await isReady())) {
+    await buildForPreview()
     server = spawn(
       process.execPath,
       [
         join(root, 'node_modules', 'vite', 'bin', 'vite.js'),
+        'preview',
         '--host',
         host,
         '--port',

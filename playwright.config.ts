@@ -1,7 +1,10 @@
 import { defineConfig } from '@playwright/test'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 export default defineConfig({
   testDir: './tests/e2e',
+  outputDir: join(tmpdir(), `portfolio-playwright-results-${process.pid}`),
   fullyParallel: true,
   forbidOnly: true,
   retries: 0,
