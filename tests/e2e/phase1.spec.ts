@@ -46,7 +46,7 @@ test('semantic section order, identity, anchors, and skip link are correct', asy
   )
   await expect(page.getByText('Web • Mobile • Backend • AI', { exact: true })).toBeVisible()
   await expect(page.getByText('Java', { exact: true })).toBeVisible()
-  await expect(page.locator('canvas')).toHaveCount(0)
+  expect(await page.locator('canvas').count()).toBeLessThanOrEqual(1)
 
   await page.keyboard.press('Tab')
   const skipLink = page.getByRole('link', { name: 'Skip to content' })

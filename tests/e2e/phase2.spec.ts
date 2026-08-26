@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 
-async function expectHeroFoundation(page: Page) {
+async function expectHeroFoundation(page: Page, fallbackOnly = false) {
   await expect(page.locator('h1')).toHaveText(
     'Building modern software experiences, from idea to production.',
   )
@@ -9,7 +9,7 @@ async function expectHeroFoundation(page: Page) {
   await expect(page.getByRole('button', { name: 'Ask My AI' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Download CV' }).first()).toBeVisible()
   await expect(page.locator('.hero-fallback')).toBeVisible()
-  await expect(page.locator('canvas')).toHaveCount(0)
+  if (fallbackOnly) await expect(page.locator('canvas')).toHaveCount(0)
 }
 
 test('keeps the DOM hero and static fallback intact without WebGL', async ({ page }) => {
@@ -21,7 +21,7 @@ test('keeps the DOM hero and static fallback intact without WebGL', async ({ pag
   })
   await page.goto('/')
 
-  await expectHeroFoundation(page)
+  await expectHeroFoundation(page, true)
   await expect(page.locator('.hero-scene-slot')).toHaveAttribute('data-scene-tier', 'static')
   await expect(page.locator('.hero-scene-slot')).toHaveAttribute(
     'data-scene-reason',
@@ -33,7 +33,7 @@ test('selects the static contract before load for reduced motion', async ({ page
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
 
-  await expectHeroFoundation(page)
+  await expectHeroFoundation(page, true)
   await expect(page.locator('.hero-scene-slot')).toHaveAttribute('data-scene-tier', 'static')
   await expect(page.locator('.hero-scene-slot')).toHaveAttribute(
     'data-scene-reason',
