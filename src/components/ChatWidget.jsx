@@ -2,12 +2,12 @@ import { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-export default function ChatWidget() {
+export default function ChatWidget({ name }) {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Hi! I'm Franci's AI Portfolio Assistant. Ask me anything about his skills, projects, or career background!",
+      content: `Hi! I'm ${name}'s AI Portfolio Assistant. Ask me about his capabilities, projects, credentials, or professional background.`,
     },
   ])
   const [input, setInput] = useState('')

@@ -2,14 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-const SUGGESTIONS = [
-  'What projects has Franci built?',
-  'What are his technical skills?',
-  'Tell me about his experience',
-  'Is he open to new opportunities?',
-]
-
-export default function AiChat() {
+export default function AiChat({ suggestions }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -90,11 +83,11 @@ export default function AiChat() {
             </div>
             <div className="ai-point">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-              Availability for roles &amp; contact
+              Selected credentials and background
             </div>
             <div className="ai-point">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-              Replies in English or Albanian
+              Same-language replies, including natural Albanian
             </div>
           </div>
         </div>
@@ -119,7 +112,7 @@ export default function AiChat() {
             </div>
             <p className="ai-section-empty-label">Try asking one of these questions:</p>
             <div className="ai-suggestions">
-              {SUGGESTIONS.map(q => (
+              {suggestions.map(q => (
                 <button
                   key={q}
                   className="ai-suggestion-chip"
@@ -163,7 +156,7 @@ export default function AiChat() {
         <div className="ai-section-input-row">
           {!isEmpty && (
             <div className="ai-suggestions ai-suggestions-inline">
-              {SUGGESTIONS.map(q => (
+              {suggestions.map(q => (
                 <button
                   key={q}
                   className="ai-suggestion-chip ai-suggestion-chip-sm"

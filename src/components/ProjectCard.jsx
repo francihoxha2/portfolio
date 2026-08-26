@@ -8,8 +8,7 @@ function ProjectCard({
   previewAlt,
   previewPosition,
 }) {
-  const isExternal = link.startsWith('http')
-  const linkLabel = isExternal ? 'Visit live platform' : 'Ask for a demo'
+  const isExternal = link?.external
 
   return (
     <article className="project-card">
@@ -36,22 +35,26 @@ function ProjectCard({
       <h3>{title}</h3>
       <p>{description}</p>
 
-      <div className="tag-list">
-        {stack.map((item) => (
-          <span key={item} className="tag">
-            {item}
-          </span>
-        ))}
-      </div>
+      {stack.length > 0 && (
+        <div className="tag-list">
+          {stack.map((item) => (
+            <span key={item} className="tag">
+              {item}
+            </span>
+          ))}
+        </div>
+      )}
 
-      <a
-        className={`project-link ${isExternal ? 'external' : ''}`}
-        href={link}
-        target={isExternal ? '_blank' : undefined}
-        rel={isExternal ? 'noreferrer' : undefined}
-      >
-        {linkLabel}
-      </a>
+      {link && (
+        <a
+          className={`project-link ${isExternal ? 'external' : ''}`}
+          href={link.href}
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noreferrer' : undefined}
+        >
+          {link.label}
+        </a>
+      )}
     </article>
   )
 }

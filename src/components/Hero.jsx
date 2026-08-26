@@ -1,33 +1,38 @@
-const TECH = ['React', 'Next.js', 'Node.js', 'MongoDB', 'Vercel', 'PWA']
+function Hero({ identity, contacts, cvPath, featuredTechnologies }) {
+  const capabilityAreas = identity.capabilityLine.split(' • ')
 
-function Hero({ profile }) {
   return (
     <section id="about" className="section hero">
       <div className="hero-copy">
         <span className="availability">
           <span className="dot" aria-hidden="true"></span>
-          Available for junior &amp; full-stack roles
+          {identity.title}
         </span>
 
         <h1>
-          I build practical <span className="accent">SaaS &amp; booking</span> platforms.
+          Building modern software experiences,{' '}
+          <span className="accent">from idea to production.</span>
         </h1>
 
         <div className="hero-identity">
-          <strong>{profile.name}</strong>
+          <strong>{identity.name}</strong>
           <span className="sep" aria-hidden="true"></span>
-          <span>{profile.title}</span>
-          <span className="sep" aria-hidden="true"></span>
-          <span>{profile.location}</span>
+          <span>{identity.capabilityLine}</span>
+          {contacts.location && (
+            <>
+              <span className="sep" aria-hidden="true"></span>
+              <span>{contacts.location.value}</span>
+            </>
+          )}
         </div>
 
-        <p className="hero-summary">{profile.about}</p>
+        <p className="hero-summary">{identity.summary}</p>
 
         <div className="hero-actions">
           <a className="button button-primary" href="#projects">
-            View Projects
+            Explore My Work
           </a>
-          <a className="button button-secondary" href={profile.cvPath} download>
+          <a className="button button-secondary" href={cvPath} download>
             Download CV
           </a>
           <a className="button button-ghost" href="#contact">
@@ -38,7 +43,7 @@ function Hero({ profile }) {
         <div className="hero-tech">
           <p className="hero-tech-label">Core stack</p>
           <div className="tech-badges">
-            {TECH.map((tech) => (
+            {featuredTechnologies.map((tech) => (
               <span key={tech} className="tech-badge">
                 {tech}
               </span>
@@ -51,45 +56,41 @@ function Hero({ profile }) {
         <div className="aside-head">
           <span className="aside-avatar">FH</span>
           <div>
-            <div className="name">{profile.name}</div>
-            <div className="role">{profile.title}</div>
+            <div className="name">{identity.name}</div>
+            <div className="role">{identity.title}</div>
           </div>
         </div>
 
         <div className="aside-stats">
-          <div className="aside-stat">
-            <strong>2</strong>
-            <span>Live web platforms shipped</span>
-          </div>
-          <div className="aside-stat">
-            <strong>Full-stack</strong>
-            <span>JavaScript &amp; React focus</span>
-          </div>
-          <div className="aside-stat">
-            <strong>MSc</strong>
-            <span>Informatics Engineering</span>
-          </div>
-          <div className="aside-stat">
-            <strong>SaaS</strong>
-            <span>Booking &amp; ops workflows</span>
-          </div>
+          {capabilityAreas.map((area) => (
+            <div className="aside-stat" key={area}>
+              <strong>{area}</strong>
+              <span>Software capability</span>
+            </div>
+          ))}
         </div>
 
         <div className="aside-info">
-          <div className="aside-info-row">
-            <span>Location</span>
-            <strong>{profile.location}</strong>
-          </div>
-          <div className="aside-info-row">
-            <span>Email</span>
-            <a href={`mailto:${profile.email}`}>{profile.email}</a>
-          </div>
-          <div className="aside-info-row">
-            <span>LinkedIn</span>
-            <a href={profile.linkedin} target="_blank" rel="noreferrer">
-              View profile
-            </a>
-          </div>
+          {contacts.location && (
+            <div className="aside-info-row">
+              <span>{contacts.location.label}</span>
+              <strong>{contacts.location.value}</strong>
+            </div>
+          )}
+          {contacts.email && (
+            <div className="aside-info-row">
+              <span>{contacts.email.label}</span>
+              <a href={contacts.email.href}>{contacts.email.value}</a>
+            </div>
+          )}
+          {contacts.linkedin && (
+            <div className="aside-info-row">
+              <span>{contacts.linkedin.label}</span>
+              <a href={contacts.linkedin.href} target="_blank" rel="noreferrer">
+                {contacts.linkedin.value}
+              </a>
+            </div>
+          )}
         </div>
       </aside>
     </section>

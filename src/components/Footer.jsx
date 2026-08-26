@@ -1,10 +1,10 @@
-function Footer({ profile, sections = [] }) {
+function Footer({ identity, sections = [] }) {
   return (
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-brand">
           <span className="brand-mark">FH</span>
-          <span>{profile.name}</span>
+          <span>{identity.name}</span>
         </div>
 
         {sections.length > 0 && (
@@ -17,7 +17,7 @@ function Footer({ profile, sections = [] }) {
           </nav>
         )}
 
-        <p className="footer-meta">&copy; {new Date().getFullYear()} {profile.name} · Built with React</p>
+        <p className="footer-meta">&copy; {new Date().getFullYear()} {identity.name} · Built with React</p>
       </div>
     </footer>
   )

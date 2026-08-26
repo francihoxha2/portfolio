@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function Navbar({ sections }) {
+function Navbar({ identity, sections, cvPath }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const closeMenu = () => setIsMenuOpen(false)
@@ -8,11 +8,11 @@ function Navbar({ sections }) {
   return (
     <header className="site-header">
       <nav className="navbar">
-        <a className="brand" href="#about" onClick={closeMenu} aria-label="Franci Hoxha — home">
+        <a className="brand" href="#about" onClick={closeMenu} aria-label={`${identity.name} — home`}>
           <span className="brand-mark">FH</span>
           <span className="brand-text">
-            <span className="brand-name">Franci Hoxha</span>
-            <span className="brand-role">Full-Stack Developer</span>
+            <span className="brand-name">{identity.name}</span>
+            <span className="brand-role">{identity.title}</span>
           </span>
         </a>
 
@@ -38,7 +38,7 @@ function Navbar({ sections }) {
           </div>
           <a
             className="nav-cta"
-            href="/Franci-Hoxha-CV.pdf"
+            href={cvPath}
             download
             onClick={closeMenu}
           >

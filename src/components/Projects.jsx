@@ -9,7 +9,9 @@ function FeaturedProject({ project }) {
             <span className="dot"></span>
             <span className="dot"></span>
             <span className="dot"></span>
-            <span className="browser-url">{project.link.replace('https://', '')}</span>
+            <span className="browser-url">
+              {project.link?.href.replace('https://', '') || project.title}
+            </span>
           </div>
           <img
             className="browser-shot"
@@ -26,13 +28,13 @@ function FeaturedProject({ project }) {
       </div>
 
       <div className="featured-body">
-        <span className="flagship-badge">★ Flagship SaaS Project</span>
+        <span className="flagship-badge">★ {project.label}</span>
 
         <div className="featured-title-row">
           <h3 style={{ fontSize: '1.7rem' }}>{project.title}</h3>
           <span className="live-pill">
             <span className="dot"></span>
-            Live
+            Featured
           </span>
         </div>
 
@@ -47,25 +49,31 @@ function FeaturedProject({ project }) {
         )}
 
         <div className="featured-foot">
-          <div className="tag-list">
-            {project.stack.map((item) => (
-              <span key={item} className="tag">
-                {item}
-              </span>
-            ))}
-          </div>
-          <a
-            className="button button-primary"
-            href={project.link}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Visit Live Platform
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M7 17 17 7" />
-              <path d="M7 7h10v10" />
-            </svg>
-          </a>
+          {project.stack.length > 0 && (
+            <div className="tag-list">
+              {project.stack.map((item) => (
+                <span key={item} className="tag">
+                  {item}
+                </span>
+              ))}
+            </div>
+          )}
+          {project.link && (
+            <a
+              className="button button-primary"
+              href={project.link.href}
+              target={project.link.external ? '_blank' : undefined}
+              rel={project.link.external ? 'noreferrer' : undefined}
+            >
+              {project.link.label}
+              {project.link.external && (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M7 17 17 7" />
+                  <path d="M7 7h10v10" />
+                </svg>
+              )}
+            </a>
+          )}
         </div>
       </div>
     </article>
@@ -80,10 +88,10 @@ function Projects({ projects }) {
     <section id="projects" className="section">
       <div className="section-head">
         <p className="eyebrow">Selected Work</p>
-        <h2>Real products, not just tutorials</h2>
+        <h2>Practical software projects</h2>
         <p>
-          A focus on practical business platforms — booking systems, role-based
-          dashboards, and deployment-ready web products used by real businesses.
+          Selected work across product-focused web applications and supporting
+          software systems.
         </p>
       </div>
 
@@ -93,7 +101,7 @@ function Projects({ projects }) {
         <>
           <div className="projects-subhead">
             <h3>More projects</h3>
-            <span>Booking platforms &amp; web applications</span>
+            <span>Selected software work</span>
           </div>
           <div className="project-grid">
             {others.map((project) => (

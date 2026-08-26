@@ -1,13 +1,15 @@
-function Education({ education, experience, courses }) {
+function Education({ journey }) {
+  const education = journey.filter((item) => item.kind === 'education')
+  const experience = journey.filter((item) => item.kind === 'experience')
+
   return (
     <section id="education" className="section">
       <div className="section-head">
         <p className="eyebrow">Background</p>
         <h2>Business, IT support, and software — by design</h2>
         <p>
-          A path that connects a business administration background, hands-on IT
-          support, and a software engineering master&rsquo;s — useful context for
-          building practical business software.
+          A path that connects business education, hands-on IT support, a completed
+          Master&rsquo;s degree, and practical software development.
         </p>
       </div>
 
@@ -23,10 +25,11 @@ function Education({ education, experience, courses }) {
           <div className="timeline">
             {education.map((item) => (
               <article key={item.title} className="timeline-item">
-                <span className="timeline-period">{item.period}</span>
+                {item.period && <span className="timeline-period">{item.period}</span>}
                 <h4>{item.title}</h4>
-                <p className="org">{item.organization}</p>
-                <p>{item.location}</p>
+                {item.organization && <p className="org">{item.organization}</p>}
+                {item.location && <p>{item.location}</p>}
+                {item.description && <p>{item.description}</p>}
               </article>
             ))}
           </div>
@@ -43,24 +46,13 @@ function Education({ education, experience, courses }) {
           <div className="timeline">
             {experience.map((item) => (
               <article key={item.title} className="timeline-item">
-                <span className="timeline-period">{item.period}</span>
+                {item.period && <span className="timeline-period">{item.period}</span>}
                 <h4>{item.title}</h4>
-                <p className="org">{item.organization}</p>
-                <p>{item.description}</p>
+                {item.organization && <p className="org">{item.organization}</p>}
+                {item.description && <p>{item.description}</p>}
               </article>
             ))}
           </div>
-        </div>
-      </div>
-
-      <div className="courses-panel">
-        <h3>Courses &amp; Training</h3>
-        <div className="chip-list">
-          {courses.map((course) => (
-            <span key={course} className="chip">
-              {course}
-            </span>
-          ))}
         </div>
       </div>
     </section>
