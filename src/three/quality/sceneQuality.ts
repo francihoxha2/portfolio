@@ -8,6 +8,9 @@ export interface SceneQualityProfile {
   shadowMapSize: 512 | 1024
   pointerParallax: boolean
   idleMotion: boolean
+  flowPulseCount: number
+  motionScale: number
+  updateRate: number
 }
 
 export const sceneQualityProfiles: Record<HeroSceneTier, SceneQualityProfile> = {
@@ -19,6 +22,9 @@ export const sceneQualityProfiles: Record<HeroSceneTier, SceneQualityProfile> = 
     shadowMapSize: 1024,
     pointerParallax: true,
     idleMotion: true,
+    flowPulseCount: 7,
+    motionScale: 1,
+    updateRate: 60,
   },
   reduced: {
     tier: 'reduced',
@@ -28,6 +34,9 @@ export const sceneQualityProfiles: Record<HeroSceneTier, SceneQualityProfile> = 
     shadowMapSize: 512,
     pointerParallax: false,
     idleMotion: true,
+    flowPulseCount: 3,
+    motionScale: 0.42,
+    updateRate: 24,
   },
   static: {
     tier: 'static',
@@ -37,5 +46,8 @@ export const sceneQualityProfiles: Record<HeroSceneTier, SceneQualityProfile> = 
     shadowMapSize: 512,
     pointerParallax: false,
     idleMotion: false,
+    flowPulseCount: 0,
+    motionScale: 0,
+    updateRate: 0,
   },
 }

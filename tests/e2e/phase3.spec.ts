@@ -35,12 +35,19 @@ test('reports renderer budgets and never mounts another canvas', async ({ page }
   const slot = page.locator('.hero-scene-slot')
   await expect(slot).toHaveAttribute('data-scene-mode', 'enhanced')
   await expect(slot).toHaveAttribute('data-scene-draw-calls', /\d+/)
+  // Cross R3F's deferred cleanup window before accepting the live renderer.
+  await page.waitForTimeout(1_250)
+  await expect(slot).toHaveAttribute('data-scene-mode', 'enhanced')
+  await expect(page.locator('canvas')).toHaveCount(1)
 
   const diagnostics = await slot.evaluate((element) => ({
     tier: element.getAttribute('data-scene-tier'),
     drawCalls: Number(element.getAttribute('data-scene-draw-calls')),
     triangles: Number(element.getAttribute('data-scene-triangles')),
+    lines: Number(element.getAttribute('data-scene-lines')),
+    points: Number(element.getAttribute('data-scene-points')),
     textures: Number(element.getAttribute('data-scene-textures')),
+    programs: Number(element.getAttribute('data-scene-programs')),
     dpr: Number(element.getAttribute('data-scene-dpr')),
   }))
 
@@ -82,7 +89,14 @@ test('replaces a context-lost canvas with the accepted static fallback', async (
 
   const slot = page.locator('.hero-scene-slot')
   await expect(slot).toHaveAttribute('data-scene-mode', 'enhanced')
-  await page.locator('canvas').dispatchEvent('webglcontextlost')
+  await page.locator('canvas').evaluate((canvas) => {
+    const drawingCanvas = canvas as HTMLCanvasElement
+    const renderingContext = drawingCanvas.getContext('webgl2')
+      ?? drawingCanvas.getContext('webgl')
+    const contextLoss = renderingContext?.getExtension('WEBGL_lose_context')
+    if (!contextLoss) throw new Error('WEBGL_lose_context is unavailable.')
+    contextLoss.loseContext()
+  })
 
   await expect(slot).toHaveAttribute('data-scene-mode', 'fallback')
   await expect(slot).toHaveAttribute('data-scene-reason', 'context-lost')
@@ -109,6 +123,8 @@ test('uses the reduced scene on a coarse-pointer mobile context', async ({ brows
   const diagnostics = await slot.evaluate((element) => ({
     drawCalls: Number(element.getAttribute('data-scene-draw-calls')),
     triangles: Number(element.getAttribute('data-scene-triangles')),
+    textures: Number(element.getAttribute('data-scene-textures')),
+    programs: Number(element.getAttribute('data-scene-programs')),
     dpr: Number(element.getAttribute('data-scene-dpr')),
   }))
   console.info('Phase 3 reduced renderer diagnostics', diagnostics)
@@ -141,4 +157,79 @@ test('repeated reduced-motion changes never leave duplicate WebGL contexts', asy
     await expect(slot).toHaveAttribute('data-scene-mode', 'enhanced')
     await expect(page.locator('canvas')).toHaveCount(1)
   }
+})
+
+test('Phase 3B exposes assembly, operational idle, and independent pointer layers', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+
+  const slot = page.locator('.hero-scene-slot')
+  const hero = page.locator('#top')
+  await expect(slot).toHaveAttribute('data-scene-mode', 'enhanced')
+  await expect(hero).toHaveAttribute('data-hero-environment', 'online')
+  await expect(page.locator('.hero-section__environment')).toHaveAttribute('aria-hidden', 'true')
+  await expect(slot).toHaveAttribute('data-scene-pointer-enabled', 'true')
+  await expect.poll(async () => Number(await slot.getAttribute('data-scene-arrival'))).toBeGreaterThan(0.98)
+  await expect.poll(async () => Number(await slot.getAttribute('data-scene-operational'))).toBeGreaterThan(0.98)
+
+  const firstIdleTick = Number(await slot.getAttribute('data-scene-idle-tick'))
+  await page.waitForTimeout(350)
+  const secondIdleTick = Number(await slot.getAttribute('data-scene-idle-tick'))
+  expect(secondIdleTick).toBeGreaterThan(firstIdleTick)
+
+  const heroBounds = await page.locator('#top').boundingBox()
+  if (!heroBounds) throw new Error('Hero bounds were unavailable.')
+  await page.mouse.move(
+    heroBounds.x + heroBounds.width * 0.88,
+    heroBounds.y + heroBounds.height * 0.28,
+  )
+  await expect(slot).toHaveAttribute('data-scene-pointer-active', 'true')
+  await expect.poll(async () => Number(await slot.getAttribute('data-scene-pointer-x'))).toBeGreaterThan(0.65)
+  await expect.poll(async () => Number.parseFloat(await hero.evaluate(
+    (element) => getComputedStyle(element).getPropertyValue('--hero-atmosphere-x'),
+  ))).toBeGreaterThan(5)
+  await page.waitForTimeout(650)
+
+  const layers = await slot.evaluate((element) => [
+    'primary',
+    'near',
+    'mid',
+    'far',
+    'data',
+  ].map((layer) => Number(element.getAttribute(`data-scene-${layer}-x`))))
+  expect(new Set(layers.map((value) => value.toFixed(3))).size).toBe(5)
+  expect(Math.abs(layers[1])).toBeGreaterThan(Math.abs(layers[0]))
+  expect(layers[2]).toBeLessThan(0)
+  expect(layers[4]).toBeLessThan(layers[3])
+
+  await page.mouse.move(5, 5)
+  await expect(slot).toHaveAttribute('data-scene-pointer-active', 'false')
+  await expect.poll(async () => Math.abs(Number(await slot.getAttribute('data-scene-near-x')))).toBeLessThan(0.012)
+  await expect.poll(async () => Math.abs(Number.parseFloat(await hero.evaluate(
+    (element) => getComputedStyle(element).getPropertyValue('--hero-atmosphere-x'),
+  )))).toBeLessThan(0.1)
+  await expect(page.locator('canvas')).toHaveCount(1)
+})
+
+test('Phase 3B recession follows initial native scroll and reverses at the Hero', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+
+  const slot = page.locator('.hero-scene-slot')
+  const hero = page.locator('#top')
+  await expect(slot).toHaveAttribute('data-scene-mode', 'enhanced')
+  await expect(slot).toHaveAttribute('data-scene-recession', '0.0000')
+
+  await page.evaluate(() => window.scrollTo(0, Math.min(420, window.innerHeight * 0.48)))
+  await expect.poll(async () => Number(await slot.getAttribute('data-scene-recession'))).toBeGreaterThan(0.25)
+  await expect.poll(async () => Number.parseFloat(await hero.evaluate(
+    (element) => getComputedStyle(element).getPropertyValue('--hero-copy-recession-y'),
+  ))).toBeLessThan(-1)
+
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await expect.poll(async () => Number(await slot.getAttribute('data-scene-recession'))).toBeLessThan(0.01)
+  await expect.poll(async () => Math.abs(Number.parseFloat(await hero.evaluate(
+    (element) => getComputedStyle(element).getPropertyValue('--hero-copy-recession-y'),
+  )))).toBeLessThan(0.1)
+  await expect(page.locator('canvas')).toHaveCount(1)
 })

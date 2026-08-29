@@ -4,13 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "postinstall": "node scripts/apply-r3f-strictmode-patch.mjs",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "node scripts/run-playwright.mjs"
+    "test:e2e": "node scripts/run-playwright.mjs",
+    "test:dev-lifecycle": "node scripts/check-phase3-dev-lifecycle.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",

@@ -19,6 +19,12 @@ describe('hero scene adaptive quality', () => {
 
     expect(sceneQualityProfiles.full.maxDpr).toBe(1.75)
     expect(sceneQualityProfiles.full.particleCount).toBeLessThanOrEqual(150)
+    expect(sceneQualityProfiles.full.flowPulseCount).toBeGreaterThan(
+      sceneQualityProfiles.reduced.flowPulseCount,
+    )
+    expect(sceneQualityProfiles.full.updateRate).toBeGreaterThan(
+      sceneQualityProfiles.reduced.updateRate,
+    )
   })
 
   it.each([
@@ -39,6 +45,8 @@ describe('hero scene adaptive quality', () => {
       maxDpr: 1.25,
       shadows: false,
       pointerParallax: false,
+      motionScale: 0.42,
+      updateRate: 24,
     })
   })
 

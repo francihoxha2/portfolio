@@ -1,7 +1,20 @@
 import { PerformanceMonitor } from '@react-three/drei'
-import { addAfterEffect, Canvas, useThree } from '@react-three/fiber'
-import { useCallback, useEffect, useRef, useState, type ComponentProps } from 'react'
-import { CineonToneMapping, Color, PCFSoftShadowMap } from 'three'
+import { addAfterEffect, Canvas, useFrame, useThree } from '@react-three/fiber'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  type ComponentProps,
+} from 'react'
+import { CineonToneMapping, Color, MathUtils, PCFShadowMap, Vector3 } from 'three'
+import {
+  getHeroRecessionProgress,
+  getSceneLayerTargets,
+  normalizePointerCoordinates,
+  SceneMotionController,
+  type SceneMotionDiagnostics,
+} from './motion/sceneMotion.ts'
 import type { SceneQualityProfile } from './quality/sceneQuality.ts'
 import DeveloperWorkspace from './scenes/DeveloperWorkspace.tsx'
 
@@ -22,26 +35,101 @@ interface DeveloperUniverseCanvasProps {
   onContextLost: () => void
   onPerformanceDecline: () => void
   onDiagnostics: (diagnostics: SceneDiagnostics) => void
+  onMotionDiagnostics: (diagnostics: SceneMotionDiagnostics) => void
 }
 
-function usePointerTarget(enabled: boolean): readonly [number, number] {
-  const [target, setTarget] = useState<readonly [number, number]>([0, 0])
+function SceneInputController({
+  active,
+  pointerEnabled,
+  controller,
+}: {
+  active: boolean
+  pointerEnabled: boolean
+  controller: SceneMotionController
+}) {
+  const canvas = useThree((state) => state.gl.domElement)
 
   useEffect(() => {
-    if (!enabled) return undefined
-
-    const updatePointer = (event: PointerEvent) => {
-      setTarget([
-        Math.max(-1, Math.min(1, (event.clientX / window.innerWidth) * 2 - 1)),
-        Math.max(-1, Math.min(1, (event.clientY / window.innerHeight) * 2 - 1)),
-      ])
+    const hero = canvas.closest<HTMLElement>('.hero-section')
+    if (!active || !hero) {
+      controller.setPointer({ x: 0, y: 0, active: false })
+      return undefined
     }
 
-    window.addEventListener('pointermove', updatePointer, { passive: true })
-    return () => window.removeEventListener('pointermove', updatePointer)
-  }, [enabled])
+    const updatePointer = (event: PointerEvent) => {
+      controller.setPointer(pointerEnabled
+        ? normalizePointerCoordinates(event.clientX, event.clientY, hero.getBoundingClientRect())
+        : { x: 0, y: 0, active: false })
+    }
 
-  return target
+    const handlePointerOut = (event: PointerEvent) => {
+      if (event.relatedTarget === null) {
+        controller.setPointer({ x: 0, y: 0, active: false })
+      }
+    }
+    const clearPointer = () => controller.setPointer({ x: 0, y: 0, active: false })
+
+    const updateRecession = () => {
+      const bounds = hero.getBoundingClientRect()
+      controller.setRecession(getHeroRecessionProgress(
+        bounds.top,
+        bounds.height,
+        window.innerHeight,
+      ))
+    }
+
+    updateRecession()
+    window.addEventListener('pointermove', updatePointer, { passive: true })
+    window.addEventListener('pointerout', handlePointerOut, { passive: true })
+    window.addEventListener('blur', clearPointer)
+    window.addEventListener('scroll', updateRecession, { passive: true })
+    window.addEventListener('resize', updateRecession, { passive: true })
+
+    return () => {
+      window.removeEventListener('pointermove', updatePointer)
+      window.removeEventListener('pointerout', handlePointerOut)
+      window.removeEventListener('blur', clearPointer)
+      window.removeEventListener('scroll', updateRecession)
+      window.removeEventListener('resize', updateRecession)
+      controller.setPointer({ x: 0, y: 0, active: false })
+    }
+  }, [active, canvas, controller, pointerEnabled])
+
+  return null
+}
+
+function CameraMotion({
+  quality,
+  controller,
+}: {
+  quality: SceneQualityProfile
+  controller: SceneMotionController
+}) {
+  const camera = useThree((state) => state.camera)
+  const cameraRef = useRef(camera)
+  const lookAtRef = useRef(new Vector3(0, -0.08, 0))
+
+  useFrame((_, delta) => {
+    const runtime = controller.read()
+    const targets = getSceneLayerTargets(
+      runtime.pointer,
+      runtime.recession,
+      quality,
+    )
+    const damping = quality.tier === 'full' ? 3.8 : 2.8
+    const safeDelta = Math.min(delta, 0.1)
+    const controlledCamera = cameraRef.current
+    const lookAt = lookAtRef.current
+
+    controlledCamera.position.x = MathUtils.damp(controlledCamera.position.x, 6.5 + targets.camera.x, damping, safeDelta)
+    controlledCamera.position.y = MathUtils.damp(controlledCamera.position.y, 4.25 + targets.camera.y, damping, safeDelta)
+    controlledCamera.position.z = MathUtils.damp(controlledCamera.position.z, 9.6 + targets.camera.z, damping, safeDelta)
+    lookAt.x = MathUtils.damp(lookAt.x, targets.camera.lookAtX, damping, safeDelta)
+    lookAt.y = MathUtils.damp(lookAt.y, -0.08 + targets.camera.lookAtY, damping, safeDelta)
+    controlledCamera.lookAt(lookAt)
+  })
+
+  return null
 }
 
 function FrameLoopController({ active }: Pick<DeveloperUniverseCanvasProps, 'active'>) {
@@ -112,11 +200,16 @@ export default function DeveloperUniverseCanvas({
   onContextLost,
   onPerformanceDecline,
   onDiagnostics,
+  onMotionDiagnostics,
 }: DeveloperUniverseCanvasProps) {
-  const pointerTarget = usePointerTarget(quality.pointerParallax && active)
+  const motionController = useMemo(() => new SceneMotionController(), [])
+  const shadows = useMemo<ComponentProps<typeof Canvas>['shadows']>(
+    () => quality.shadows ? { enabled: true, type: PCFShadowMap } : false,
+    [quality.shadows],
+  )
   const handleCreated = useCallback(({ gl, camera }: Parameters<NonNullable<ComponentProps<typeof Canvas>['onCreated']>>[0]) => {
     gl.setClearColor(new Color('#070911'), 0)
-    gl.shadowMap.type = PCFSoftShadowMap
+    gl.shadowMap.type = PCFShadowMap
     gl.toneMapping = CineonToneMapping
     gl.toneMappingExposure = 1.04
     camera.lookAt(0, -0.08, 0)
@@ -137,7 +230,7 @@ export default function DeveloperUniverseCanvas({
           stencil: false,
         }}
         onCreated={handleCreated}
-        shadows={quality.shadows}
+        shadows={shadows}
       >
         <ambientLight intensity={0.42} color="#9eb6d2" />
         <hemisphereLight args={['#849cff', '#07080e', 0.72]} />
@@ -173,11 +266,18 @@ export default function DeveloperUniverseCanvas({
         >
           <DeveloperWorkspace
             quality={quality}
-            pointerTarget={pointerTarget}
+            motionController={motionController}
             onReady={onReady}
+            onMotionDiagnostics={onMotionDiagnostics}
           />
         </PerformanceMonitor>
 
+        <SceneInputController
+          active={active}
+          pointerEnabled={quality.pointerParallax}
+          controller={motionController}
+        />
+        <CameraMotion quality={quality} controller={motionController} />
         <FrameLoopController active={active} />
         <ContextLossMonitor onContextLost={onContextLost} />
         <RendererDiagnostics quality={quality} onDiagnostics={onDiagnostics} />
