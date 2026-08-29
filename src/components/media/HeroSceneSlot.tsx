@@ -61,10 +61,12 @@ export default function HeroSceneSlot() {
   const [readyKey, setReadyKey] = useState<string | null>(null)
   const [failureReason, setFailureReason] = useState<SceneFailureReason | null>(null)
   const [diagnostics, setDiagnostics] = useState<SceneDiagnostics | null>(null)
+  const [sceneYielded, setSceneYielded] = useState(false)
   const qualityIsStatic = quality.profile.tier === 'static'
   const sceneAllowed = capability.allowsScene && !qualityIsStatic && !failureReason
   const shouldLoad = useDeferredSceneLoad(Boolean(sceneAllowed))
-  const sceneActive = useSceneActivity(slotRef, shouldLoad && Boolean(sceneAllowed))
+  const sceneInView = useSceneActivity(slotRef, shouldLoad && Boolean(sceneAllowed))
+  const sceneActive = sceneInView && !sceneYielded
   const sceneTier = capability.allowsScene ? quality.profile.tier : capability.tier
   const sceneReason = failureReason ?? (
     capability.allowsScene ? quality.reason : capability.reason
@@ -84,6 +86,33 @@ export default function HeroSceneSlot() {
       resetHeroMotion(hero)
     }
   }, [sceneMode])
+
+  useEffect(() => {
+    const slot = slotRef.current
+    const story = slot?.closest<HTMLElement>('.hero-planify-story')
+    const initialProgress = Number(story?.dataset.transitionProgress ?? 0)
+    setSceneYielded(initialProgress >= 0.98)
+
+    const updateOwnership = (event: Event) => {
+      const transitionEvent = event as CustomEvent<{
+        progress?: number
+        domOwnership?: number
+      }>
+      const progress = Number(transitionEvent.detail?.progress ?? 0)
+      const ownership = Number(transitionEvent.detail?.domOwnership ?? 0)
+
+      setSceneYielded((current) => {
+        if (ownership >= 0.98 || progress >= 0.995) return true
+        if (ownership <= 0.9 && progress < 0.96) return false
+        return current
+      })
+    }
+
+    window.addEventListener('portfolio:hero-planify-progress', updateOwnership)
+    return () => {
+      window.removeEventListener('portfolio:hero-planify-progress', updateOwnership)
+    }
+  }, [])
 
   const diagnosticAttributes = useMemo(() => ({
     'data-scene-draw-calls': diagnostics?.drawCalls,
@@ -129,6 +158,10 @@ export default function HeroSceneSlot() {
     slot.setAttribute('data-scene-operational', motion.operational.toFixed(4))
     slot.setAttribute('data-scene-idle-tick', String(motion.idleTick))
     slot.setAttribute('data-scene-recession', motion.recession.toFixed(4))
+    slot.setAttribute('data-scene-transition', motion.transition.toFixed(4))
+    slot.setAttribute('data-scene-convergence', motion.convergence.toFixed(4))
+    slot.setAttribute('data-scene-monitor-focus', motion.monitorFocus.toFixed(4))
+    slot.setAttribute('data-scene-supporting-depth', motion.supportingDepth.toFixed(4))
     slot.setAttribute('data-scene-primary-x', motion.primaryX.toFixed(4))
     slot.setAttribute('data-scene-near-x', motion.nearX.toFixed(4))
     slot.setAttribute('data-scene-mid-x', motion.midX.toFixed(4))
@@ -145,6 +178,7 @@ export default function HeroSceneSlot() {
       data-scene-reason={sceneReason}
       data-scene-loaded={shouldLoad && sceneAllowed}
       data-scene-active={sceneActive}
+      data-scene-yielded={sceneYielded}
       data-scene-pointer-enabled={Boolean(sceneAllowed && quality.profile.pointerParallax)}
       data-scene-idle-enabled={Boolean(sceneAllowed && quality.profile.idleMotion)}
       {...diagnosticAttributes}

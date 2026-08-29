@@ -24,6 +24,7 @@ import {
   systemConnections,
   type SceneVector3,
 } from '../../data/scene.ts'
+import { getHeroPlanifySignals } from '../../transitions/heroPlanifyModel.ts'
 import {
   getLayerArrivalProgress,
   getSceneLayerTargets,
@@ -44,8 +45,11 @@ interface DeveloperWorkspaceProps {
 type MotionComponentProps = Pick<DeveloperWorkspaceProps, 'quality' | 'motionController'>
 
 function sceneActivity(runtime: SceneMotionRuntime, quality: SceneQualityProfile) {
+  const sceneYield = getHeroPlanifySignals(runtime.transition).sceneYield
   return quality.idleMotion
-    ? runtime.operational * quality.motionScale * (1 - runtime.recession * 0.72)
+    ? runtime.operational
+      * quality.motionScale
+      * (1 - Math.max(runtime.recession * 0.72, sceneYield * 0.96))
     : 0
 }
 
@@ -81,14 +85,30 @@ function Monitor({
   const monitorRef = useRef<Group>(null)
   const signalRef = useRef<MeshBasicMaterial>(null)
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
     if (!monitorRef.current) return
-    const activity = sceneActivity(motionController.read(), quality)
+    const runtime = motionController.read()
+    const activity = sceneActivity(runtime, quality)
+    const focusScale = quality.tier === 'full' ? 1 : 0.48
+    const focus = getHeroPlanifySignals(runtime.transition).monitorFocus * focusScale
     const phase = clock.elapsedTime * 0.58
-    monitorRef.current.position.y = 0.3 + Math.sin(phase) * 0.012 * activity
+    const safeDelta = Math.min(delta, 0.1)
+    monitorRef.current.position.x = MathUtils.damp(monitorRef.current.position.x, -0.2 + focus * 0.08, 6, safeDelta)
+    monitorRef.current.position.y = MathUtils.damp(
+      monitorRef.current.position.y,
+      0.3 + focus * 0.32 + Math.sin(phase) * 0.012 * activity,
+      6,
+      safeDelta,
+    )
+    monitorRef.current.position.z = MathUtils.damp(monitorRef.current.position.z, -0.55 + focus * 0.38, 6, safeDelta)
+    monitorRef.current.rotation.y = MathUtils.damp(monitorRef.current.rotation.y, -0.06 * (1 - focus), 6, safeDelta)
     monitorRef.current.rotation.z = Math.sin(phase * 0.63) * 0.0022 * activity
+    const monitorScale = 1 + focus * 0.14
+    monitorRef.current.scale.x = MathUtils.damp(monitorRef.current.scale.x, monitorScale, 6, safeDelta)
+    monitorRef.current.scale.y = MathUtils.damp(monitorRef.current.scale.y, monitorScale, 6, safeDelta)
+    monitorRef.current.scale.z = MathUtils.damp(monitorRef.current.scale.z, monitorScale, 6, safeDelta)
     if (signalRef.current) {
-      signalRef.current.opacity = 0.72 + (0.2 + Math.sin(phase * 1.7) * 0.08) * activity
+      signalRef.current.opacity = 0.72 + focus * 0.2 + (0.2 + Math.sin(phase * 1.7) * 0.08) * activity
     }
   })
 
@@ -458,6 +478,18 @@ function dampLayer(
   group.rotation.y = MathUtils.damp(group.rotation.y, target.rotationY, damping, delta)
 }
 
+function dampScale(
+  group: Group | null,
+  target: { x: number; y: number; z: number },
+  damping: number,
+  delta: number,
+) {
+  if (!group) return
+  group.scale.x = MathUtils.damp(group.scale.x, target.x, damping, delta)
+  group.scale.y = MathUtils.damp(group.scale.y, target.y, damping, delta)
+  group.scale.z = MathUtils.damp(group.scale.z, target.z, damping, delta)
+}
+
 export default function DeveloperWorkspace({
   quality,
   motionController,
@@ -495,7 +527,16 @@ export default function DeveloperWorkspace({
     const safeDelta = Math.min(delta, 0.1)
     const runtime = motionController.advance(safeDelta, readyRef.current, quality)
 
-    const targets = getSceneLayerTargets(runtime.pointer, runtime.recession, quality)
+    const targets = getSceneLayerTargets(
+      runtime.pointer,
+      runtime.recession,
+      quality,
+      runtime.transition,
+    )
+    const transitionSignals = getHeroPlanifySignals(runtime.transition)
+    const transitionScale = quality.tier === 'full' ? 1 : 0.48
+    const convergence = transitionSignals.convergence * transitionScale
+    const focus = transitionSignals.monitorFocus * transitionScale
     const damping = quality.tier === 'full' ? 5.2 : 4.1
     const primaryArrival = getLayerArrivalProgress(runtime.arrivalElapsed, 0, 0.88)
     const nearArrival = getLayerArrivalProgress(runtime.arrivalElapsed, 0.2, 0.9)
@@ -504,9 +545,9 @@ export default function DeveloperWorkspace({
     const dataArrival = getLayerArrivalProgress(runtime.arrivalElapsed, 0.66, 0.92)
 
     if (rootRef.current) {
-      rootRef.current.position.y = MathUtils.damp(rootRef.current.position.y, -runtime.recession * 0.08, damping, safeDelta)
-      rootRef.current.position.z = MathUtils.damp(rootRef.current.position.z, -runtime.recession * 0.5, damping, safeDelta)
-      const rootScale = 1 - runtime.recession * 0.035
+      rootRef.current.position.y = MathUtils.damp(rootRef.current.position.y, -runtime.recession * 0.08 + focus * 0.06, damping, safeDelta)
+      rootRef.current.position.z = MathUtils.damp(rootRef.current.position.z, -runtime.recession * 0.5 + focus * 0.34, damping, safeDelta)
+      const rootScale = 1 - runtime.recession * 0.035 + focus * 0.08
       rootRef.current.scale.x = MathUtils.damp(rootRef.current.scale.x, rootScale, damping, safeDelta)
       rootRef.current.scale.y = MathUtils.damp(rootRef.current.scale.y, rootScale, damping, safeDelta)
       rootRef.current.scale.z = MathUtils.damp(rootRef.current.scale.z, rootScale, damping, safeDelta)
@@ -515,28 +556,33 @@ export default function DeveloperWorkspace({
     dampLayer(primaryRef.current, targets.primary, {
       x: 0,
       y: (1 - primaryArrival) * -0.34,
-      z: (1 - primaryArrival) * -0.48 + runtime.recession * 0.1,
+      z: (1 - primaryArrival) * -0.48 + runtime.recession * 0.1 + focus * 0.16,
     }, damping, safeDelta)
     dampLayer(nearRef.current, targets.near, {
       x: (1 - nearArrival) * -0.52,
       y: (1 - nearArrival) * 0.06,
-      z: (1 - nearArrival) * 0.48,
+      z: (1 - nearArrival) * 0.48 - convergence * 1.52,
     }, damping, safeDelta)
     dampLayer(midRef.current, targets.mid, {
       x: (1 - midArrival) * 0.42,
       y: (1 - midArrival) * -0.1,
-      z: (1 - midArrival) * -0.38,
+      z: (1 - midArrival) * -0.38 - convergence * 1.38,
     }, damping, safeDelta)
     dampLayer(farRef.current, targets.far, {
       x: 0,
       y: (1 - farArrival) * 0.18,
-      z: (1 - farArrival) * -0.64 - runtime.recession * 0.12,
+      z: (1 - farArrival) * -0.64 - runtime.recession * 0.12 - convergence * 2.04,
     }, damping, safeDelta)
     dampLayer(dataRef.current, targets.data, {
       x: 0,
       y: (1 - dataArrival) * 0.24,
-      z: (1 - dataArrival) * -0.82 - runtime.recession * 0.2,
+      z: (1 - dataArrival) * -0.82 - runtime.recession * 0.2 - convergence * 0.92,
     }, damping, safeDelta)
+
+    dampScale(nearRef.current, { x: 1 - convergence * 0.24, y: 1 - convergence * 0.24, z: 1 }, damping, safeDelta)
+    dampScale(midRef.current, { x: 1 - convergence * 0.28, y: 1 - convergence * 0.28, z: 1 }, damping, safeDelta)
+    dampScale(farRef.current, { x: 1 - convergence * 0.46, y: 1 - convergence * 0.46, z: 1 }, damping, safeDelta)
+    dampScale(dataRef.current, { x: 1 - convergence * 0.7, y: 1 - convergence * 0.62, z: 1 }, damping, safeDelta)
 
     reportElapsedRef.current += safeDelta
     if (readyRef.current && reportElapsedRef.current >= 0.2) {
@@ -549,6 +595,10 @@ export default function DeveloperWorkspace({
         operational: runtime.operational,
         idleTick: runtime.idleTick,
         recession: runtime.recession,
+        transition: runtime.transition,
+        convergence: transitionSignals.convergence,
+        monitorFocus: transitionSignals.monitorFocus,
+        supportingDepth: convergence,
         primaryX: primaryRef.current?.position.x ?? 0,
         nearX: nearRef.current?.position.x ?? 0,
         midX: midRef.current?.position.x ?? 0,

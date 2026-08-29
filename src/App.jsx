@@ -4,9 +4,8 @@ import SiteHeader from './components/navigation/SiteHeader'
 import ContactSection from './sections/ContactSection'
 import CredentialsSection from './sections/CredentialsSection'
 import EngineeringStackSection from './sections/EngineeringStackSection'
-import HeroSection from './sections/HeroSection'
+import HeroPlanifyStory from './sections/HeroPlanifyStory'
 import JourneySection from './sections/JourneySection'
-import PlanifySection from './sections/PlanifySection'
 import SelectedWorkSection from './sections/SelectedWorkSection'
 import SiteFooter from './sections/SiteFooter'
 import { portfolio } from '../shared/portfolio.ts'
@@ -56,8 +55,12 @@ function App() {
       <SiteHeader identity={portfolio.identity} sections={navigation} cvPath={cvPath} />
 
       <main id="main-content" className="page-content" tabIndex={-1}>
-        <HeroSection identity={portfolio.identity} cvPath={cvPath} />
-        <PlanifySection project={featuredProject} />
+        <HeroPlanifyStory
+          identity={portfolio.identity}
+          cvPath={cvPath}
+          project={featuredProject}
+          capabilityGroups={capabilityGroups}
+        />
         <SelectedWorkSection projects={selectedProjects} />
         <EngineeringStackSection capabilityGroups={capabilityGroups} />
         <JourneySection journey={journey} />

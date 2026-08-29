@@ -62,6 +62,32 @@ describe('Phase 3B scene motion model', () => {
     expect(targets.mid.x).toBeGreaterThan(0)
   })
 
+  it('converges supporting layers and focuses the monitor camera from transition progress', () => {
+    const active = getSceneLayerTargets(
+      { x: 0, y: 0, active: false },
+      0,
+      sceneQualityProfiles.full,
+      0,
+    )
+    const focused = getSceneLayerTargets(
+      { x: 0, y: 0, active: false },
+      1,
+      sceneQualityProfiles.full,
+      1,
+    )
+
+    expect(focused.near.x).toBeGreaterThan(active.near.x)
+    expect(focused.mid.x).toBeLessThan(active.mid.x)
+    expect(focused.camera.z).toBeLessThan(active.camera.z - 4)
+    expect(focused.camera.x).toBeLessThan(active.camera.x - 4)
+
+    const controller = new SceneMotionController()
+    controller.setTransition(3)
+    expect(controller.read().transition).toBe(1)
+    controller.setTransition(-3)
+    expect(controller.read().transition).toBe(0)
+  })
+
   it('stages assembly before operational idle and advances deterministic ticks', () => {
     expect(getLayerArrivalProgress(0.3, 0, 0.9)).toBeGreaterThan(
       getLayerArrivalProgress(0.3, 0.2, 0.9),

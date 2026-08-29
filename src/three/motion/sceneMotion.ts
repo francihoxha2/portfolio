@@ -1,4 +1,5 @@
 import type { SceneQualityProfile } from '../quality/sceneQuality.ts'
+import { getHeroPlanifySignals } from '../../transitions/heroPlanifyModel.ts'
 
 export interface ScenePointerState {
   x: number
@@ -9,6 +10,7 @@ export interface ScenePointerState {
 export interface SceneMotionRuntime {
   readonly pointer: ScenePointerState
   readonly recession: number
+  readonly transition: number
   readonly arrivalElapsed: number
   readonly arrival: number
   readonly operational: number
@@ -32,6 +34,10 @@ export interface SceneMotionDiagnostics {
   operational: number
   idleTick: number
   recession: number
+  transition: number
+  convergence: number
+  monitorFocus: number
+  supportingDepth: number
   primaryX: number
   nearX: number
   midX: number
@@ -56,6 +62,7 @@ export const sceneMotionTiming = {
 export const createSceneMotionRuntime = (): SceneMotionRuntime => ({
   pointer: { x: 0, y: 0, active: false },
   recession: 0,
+  transition: 0,
   arrivalElapsed: 0,
   arrival: 0,
   operational: 0,
@@ -75,6 +82,10 @@ export class SceneMotionController {
 
   setRecession(recession: number) {
     this.runtime = { ...this.runtime, recession: clampUnit(recession) }
+  }
+
+  setTransition(transition: number) {
+    this.runtime = { ...this.runtime, transition: clampUnit(transition) }
   }
 
   advance(delta: number, started: boolean, quality: SceneQualityProfile) {
@@ -166,49 +177,54 @@ export function getSceneLayerTargets(
   pointer: ScenePointerState,
   recession: number,
   quality: SceneQualityProfile,
+  transitionProgress = 0,
 ): SceneLayerTargets {
   const pointerEnabled = quality.pointerParallax && pointer.active
   const x = pointerEnabled ? shapePointer(pointer.x) : 0
   const y = pointerEnabled ? shapePointer(pointer.y) : 0
   const recede = clampUnit(recession)
+  const signals = getHeroPlanifySignals(transitionProgress)
+  const cinematicScale = quality.tier === 'full' ? 1 : 0.48
+  const convergence = signals.convergence * cinematicScale
+  const focus = signals.monitorFocus * cinematicScale
 
   return {
     primary: {
-      x: x * 0.075,
-      y: -y * 0.045 - recede * 0.06,
+      x: x * 0.075 + focus * 0.08,
+      y: -y * 0.045 - recede * 0.06 + focus * 0.04,
       rotationX: -y * 0.012,
-      rotationY: x * 0.018,
+      rotationY: x * 0.018 * (1 - focus),
     },
     near: {
-      x: x * 0.26 - recede * 0.34,
-      y: -y * 0.13 + recede * 0.08,
+      x: x * 0.26 - recede * 0.34 + convergence * 0.88,
+      y: -y * 0.13 + recede * 0.08 - convergence * 0.05,
       rotationX: -y * 0.04,
-      rotationY: x * 0.062,
+      rotationY: x * 0.062 * (1 - convergence),
     },
     mid: {
-      x: -x * 0.14 + recede * 0.28,
-      y: y * 0.075 + recede * 0.035,
+      x: -x * 0.14 + recede * 0.28 - convergence * 0.78,
+      y: y * 0.075 + recede * 0.035 + convergence * 0.03,
       rotationX: y * 0.022,
-      rotationY: -x * 0.034,
+      rotationY: -x * 0.034 * (1 - convergence),
     },
     far: {
-      x: -x * 0.21 + recede * 0.16,
-      y: y * 0.1 + recede * 0.1,
+      x: -x * 0.21 + recede * 0.16 - convergence * 0.08,
+      y: y * 0.1 + recede * 0.1 + convergence * 0.12,
       rotationX: y * 0.012,
-      rotationY: -x * 0.022,
+      rotationY: -x * 0.022 * (1 - convergence),
     },
     data: {
-      x: -x * 0.3 + recede * 0.2,
-      y: y * 0.15 + recede * 0.12,
+      x: -x * 0.3 + recede * 0.2 - convergence * 0.2,
+      y: y * 0.15 + recede * 0.12 + convergence * 0.08,
       rotationX: y * 0.018,
-      rotationY: -x * 0.028,
+      rotationY: -x * 0.028 * (1 - convergence),
     },
     camera: {
-      x: x * 0.22,
-      y: -y * 0.14,
-      z: -recede * 0.38 - Math.abs(x) * 0.035,
-      lookAtX: x * 0.12,
-      lookAtY: -y * 0.07 - recede * 0.035,
+      x: x * 0.22 - focus * 5.05,
+      y: -y * 0.14 - focus * 2.72,
+      z: -recede * 0.38 - Math.abs(x) * 0.035 - focus * 4.25,
+      lookAtX: x * 0.12 - focus * 0.18,
+      lookAtY: -y * 0.07 - recede * 0.035 + focus * 0.3,
     },
   }
 }

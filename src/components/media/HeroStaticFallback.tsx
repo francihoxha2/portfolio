@@ -35,7 +35,7 @@ export default function HeroStaticFallback() {
           <span />
           <span />
         </div>
-        <div className="hero-fallback__screen">
+        <div className="hero-fallback__screen" data-planify-origin-screen>
           <img
             src="/planify-preview.png"
             alt=""

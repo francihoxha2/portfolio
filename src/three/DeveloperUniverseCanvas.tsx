@@ -38,6 +38,10 @@ interface DeveloperUniverseCanvasProps {
   onMotionDiagnostics: (diagnostics: SceneMotionDiagnostics) => void
 }
 
+interface HeroPlanifyProgressEvent extends Event {
+  detail?: { progress?: number }
+}
+
 function SceneInputController({
   active,
   pointerEnabled,
@@ -70,6 +74,8 @@ function SceneInputController({
     const clearPointer = () => controller.setPointer({ x: 0, y: 0, active: false })
 
     const updateRecession = () => {
+      const story = hero.closest<HTMLElement>('.hero-planify-story')
+      if (story?.dataset.transitionEnhanced === 'true') return
       const bounds = hero.getBoundingClientRect()
       controller.setRecession(getHeroRecessionProgress(
         bounds.top,
@@ -98,6 +104,38 @@ function SceneInputController({
   return null
 }
 
+function SceneTransitionController({
+  controller,
+}: {
+  controller: SceneMotionController
+}) {
+  const canvas = useThree((state) => state.gl.domElement)
+  const invalidate = useThree((state) => state.invalidate)
+
+  useEffect(() => {
+    const slot = canvas.closest<HTMLElement>('.hero-scene-slot')
+    const initialProgress = Number(slot?.dataset.transitionProgress ?? 0)
+    controller.setTransition(initialProgress)
+    controller.setRecession(initialProgress)
+
+    const updateTransition = (event: Event) => {
+      const progressEvent = event as HeroPlanifyProgressEvent
+      const progress = Number(progressEvent.detail?.progress ?? 0)
+      controller.setTransition(progress)
+      controller.setRecession(progress)
+      invalidate()
+    }
+
+    window.addEventListener('portfolio:hero-planify-progress', updateTransition)
+    return () => {
+      window.removeEventListener('portfolio:hero-planify-progress', updateTransition)
+      controller.setTransition(0)
+    }
+  }, [canvas, controller, invalidate])
+
+  return null
+}
+
 function CameraMotion({
   quality,
   controller,
@@ -115,6 +153,7 @@ function CameraMotion({
       runtime.pointer,
       runtime.recession,
       quality,
+      runtime.transition,
     )
     const damping = quality.tier === 'full' ? 3.8 : 2.8
     const safeDelta = Math.min(delta, 0.1)
@@ -277,6 +316,7 @@ export default function DeveloperUniverseCanvas({
           pointerEnabled={quality.pointerParallax}
           controller={motionController}
         />
+        <SceneTransitionController controller={motionController} />
         <CameraMotion quality={quality} controller={motionController} />
         <FrameLoopController active={active} />
         <ContextLossMonitor onContextLost={onContextLost} />
