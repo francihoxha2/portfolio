@@ -2,22 +2,29 @@
 
 **Project:** Franci Hoxha Portfolio3D
 **Document status:** Planning source of truth - implementation is not authorized by this document
+**Creative direction amendment:** On 2026-08-27, the creative interaction direction was strengthened after live Phase 3 review. This amendment raises the interaction and motion-quality target without changing the approved architecture, evidence, accessibility, progressive-enhancement, or performance guardrails.
 **Audit date:** 2026-08-26
 **Repository branch audited:** `main`
-**Target outcome:** A premium, modern, highly polished interactive 3D software developer portfolio that remains fast, accessible, credible, and easy for recruiters to understand.
+**Target outcome:** A premium, highly interactive, Awwwards-level creative software-engineering experience that feels alive and spatial while remaining fast, accessible, credible, evidence-led, and easy for recruiters to understand.
 
 > Scope lock: this planning pass does not redesign components, install packages, change source code, replace the CV, delete assets, commit, or deploy. The only repository deliverable from the planning task is this document.
 
 ## 1. Executive Vision
 
-The redesign will express **"Franci's Developer Universe"** as a coherent software system rather than a literal space scene. The site should feel like a composed digital environment built from a workstation, product interfaces, data paths, API nodes, restrained lighting, and meaningful system relationships. Every visual device must support a professional message: Franci can understand a problem, build across the stack, ship a product, and explain the result.
+The redesign will express **"Franci's Developer Universe"** as a living software system rather than a literal space scene. Entering the portfolio should feel like entering an active digital environment built from a workstation, product interfaces, data paths, API nodes, restrained lighting, and meaningful system relationships. Scroll, pointer interaction, depth, system motion, project storytelling, typography, WebGL, DOM, SVG, and microinteractions should work together as one designed experience. Every visual device must support a professional message: Franci can understand a problem, build across the stack, ship a product, and explain the result.
+
+The connected narrative is:
+
+**Identity → System → Product → Capability → Journey → AI → Contact**
 
 The experience must satisfy two reading depths at the same time:
 
 - In the first 5-10 seconds, a recruiter can identify Franci Hoxha, the role **Full-Stack Software Developer**, the breadth **Web • Mobile • Backend • AI**, Planify as the flagship project, the main work CTA, the AI assistant, CV access, and contact access.
 - On deeper exploration, an engineering or design reviewer can find project responsibilities, system capabilities, a credible stack, the progression from business and IT operations into software/product development, certificates, thoughtful 3D architecture, and evidence of delivery discipline.
 
-The design standard is **Awwwards-level composition and polish with professional portfolio usability**. It must not become a game, a cyberpunk dashboard, a portfolio of animation tricks, or an interface whose professional content depends on WebGL.
+The creative-quality target is **Awwwards / top creative-developer portfolio quality, with stronger recruiter usability, engineering credibility, accessibility, and evidence discipline than spectacle-first portfolios**. Premium does **not** mean static, minimally animated, or merely polished in screenshots. The experience may be visually ambitious and highly interactive as long as meaning stays in the DOM, motion has a purpose, reduced-motion/static alternatives remain first-class, performance budgets remain enforced, and recruiter comprehension stays immediate.
+
+It must not become a game, a cyberpunk dashboard, a literal space/planet scene, an animation demo, a clone of another portfolio, or an interface whose professional content depends on WebGL.
 
 ### Non-negotiable product principles
 
@@ -28,6 +35,15 @@ The design standard is **Awwwards-level composition and polish with professional
 5. **Progressive enhancement.** Identity, navigation, work, CV, AI entry points, and contact remain useful when 3D is loading, disabled, reduced, or unavailable.
 6. **Content integrity.** No employer, client, user, scale, integration, certification, date, availability claim, or project capability is published without support.
 7. **Performance is a feature.** The first impression cannot wait for a scene, model, font, or AI response.
+8. **Interaction communicates system behavior.** Motion explains relationships, hierarchy, data flow, depth, navigation, or state instead of existing as decoration.
+
+### Global interaction design principle
+
+Interaction must make the portfolio's software-system concept easier to perceive. Data can move between interface, API, and data nodes; layers can respond according to spatial depth; project visuals can transform between scene and DOM; system paths can activate as capabilities are explored; scroll transitions can advance the professional story; and sections can visibly evolve or settle as the visitor moves through the page.
+
+Avoid arbitrary spinning, floating, bouncing, direct cursor chasing, or continuous movement with no semantic role. A motion effect is admitted only when it clarifies a relationship, reinforces hierarchy, signals state, directs attention, or strengthens the connected narrative.
+
+This creative amendment does not weaken evidence-before-spectacle, semantic/indexable DOM, the one-WebGL-canvas architecture, static and no-WebGL fallbacks, reduced-motion behavior, context-loss recovery, adaptive DPR/quality, offscreen/hidden rendering pause, native browser scroll, the prohibition on scroll snapping, keyboard/mobile accessibility, performance and bundle budgets, claim verification, AI security boundaries, Planify payment/Polar removal, CV/content truthfulness, or immediate recruiter comprehension. The visually extraordinary result must be produced inside those constraints.
 
 ### Recommended high-level technical direction
 
@@ -37,7 +53,7 @@ The design standard is **Awwwards-level composition and polish with professional
 - Keep native browser scrolling. Do **not** add Lenis initially.
 - Do **not** add Motion initially; GSAP and CSS cover the planned motion system.
 - Use one lazy-loaded WebGL canvas for the hero-to-Planify story.
-- Build the Engineering Constellation with semantic DOM plus SVG, not a second WebGL canvas.
+- Build the Engineering System Map with semantic DOM plus SVG, not a second WebGL canvas.
 - Consolidate the full AI section and floating widget into one assistant experience with multiple entry points and one shared session.
 - Introduce a shared public portfolio data module consumed by both the visible site and the server-side AI prompt builder.
 - Use an incremental TypeScript migration for new data, 3D, and API modules; do not rewrite untouched code solely to change extensions.
@@ -433,10 +449,14 @@ Do not retain the current profile-stat card. Do not present Franci as a current 
 
 ### 7.2 Interaction
 
-- Pointer motion can shift the scene/camera target by a maximum visual angle of roughly 1-2 degrees and translate depth layers by a few pixels.
-- Interpolation must be slow and weighted, not direct cursor chasing.
-- Disable pointer parallax for coarse pointers, touch, reduced motion, and low-quality mode.
-- The scene has subtle idle movement (slow breathing light, slight panel drift, limited data pulses) but no object spins, orbit controls, or user-controlled camera.
+- After the DOM content is available, the full-quality scene performs an intentional entrance/build-up sequence that establishes the workstation, connected modules, and Planify monitor without delaying or obscuring the copy.
+- The full-quality desktop scene continuously shows restrained operational activity: moving data nodes, visible pulses through selected connections, interface/system micro-animation, and subtle workstation motion.
+- Pointer input produces perceptible layered parallax and a smoothly damped camera/scene target response. The monitor, near panels, far modules, nodes, and data layers respond independently according to depth rather than moving as one flat group.
+- Use a tunable interaction envelope rather than a fixed conservative limit. A recommended full-quality starting range is approximately 2-4 degrees of camera/scene rotational response where visually appropriate and roughly 6-24 CSS-equivalent pixels of near/far layer translation according to depth. These are tuning ranges, not mandatory final values; live visual QA determines the final amplitude.
+- Apply slow damping, non-linear weighting, bounded targets, and calm return behavior. Nothing directly chases the pointer, snaps between states, or gives the visitor orbit/camera controls.
+- Localized hover/pointer reactions may activate nearby nodes, paths, or interface states when they clarify a system relationship and have an equivalent stable/focus/touch treatment where meaning is involved.
+- Initial scroll away from the Hero introduces a subtle recession/depth state that prepares the later Hero-to-Planify handoff without implementing the full transition before Phase 4.
+- The reduced tier is significantly calmer. Coarse pointer/touch disables cursor parallax, and reduced-motion/static tiers remove continuous motion while preserving the same composition and professional meaning.
 - The HTML hero appears immediately. The scene placeholder is a composed gradient/silhouette, not a loading percentage.
 
 ### 7.3 Mobile composition
@@ -452,9 +472,11 @@ Do not retain the current profile-stat card. Do not present Franci as a current 
 - Identity/title, main statement, capability line, Explore My Work, Ask My AI, and CV access are understandable before 3D loads.
 - No recruiter-critical text is inside canvas.
 - Keyboard focus order follows the visual order.
-- With reduced motion, copy is immediately present and the scene is static or near-static.
+- With reduced motion, copy is immediately present and the scene uses an intentional stable composition with no continuous motion.
 - With WebGL blocked, the layout remains visually intentional and no empty right-hand hole appears.
 - At 320, 375, 390, 768, 1,024, 1,440, and ultrawide widths there is no horizontal overflow or clipped CTA.
+- In full-quality desktop mode, live review confirms that the Hero clearly feels alive, spatial, and connected without compromising copy legibility or CTA use.
+- Motion quality is judged in a real browser for perceptibility, smoothness, timing, hierarchy, responsiveness, semantic purpose, and distraction; screenshots alone do not satisfy the interactive acceptance gate.
 
 ## 8. Detailed 3D Scene Concept
 
@@ -472,7 +494,16 @@ The scene is an abstract premium developer workstation assembled from lightweigh
 
 The visual message is: an interface is one part of a connected product system.
 
-### 8.2 Material and lighting language
+### 8.2 Operational behavior
+
+- The scene behaves like a functioning system rather than a still life: selected data nodes travel through bounded paths, connection pulses communicate flow, and interface modules change state with restrained sequencing.
+- Depth is structural. Near, middle, and far layers use distinct response weights so pointer and scroll input reveal spatial relationships rather than translating the whole scene uniformly.
+- Idle motion is meaningful and perceptible in the full tier: it can suggest service activity, interface refresh, or data transfer, but must not become random drift.
+- Motion priority follows the story: identity/workstation first, Planify monitor second, supporting system activity third. Background motion must yield visually when the visitor reads or interacts with controls.
+- Prefer existing R3F/Three primitives, instancing, material state, and `useFrame` before adding another runtime dependency. No postprocessing is required; any later exception needs measured visual benefit and must stay inside the approved budgets.
+- Full, reduced, and static modes share the same conceptual composition. Reduced mode lowers frequency, amplitude, node count, and update cost; static mode preserves a deliberate visual state without continuous animation.
+
+### 8.3 Material and lighting language
 
 - Base materials: rough dark metal, charcoal polymer, smoked glass used sparingly, low-intensity emissive edges.
 - Avoid mirror-like chrome and high-transmission glass across large surfaces.
@@ -481,7 +512,7 @@ The visual message is: an interface is one part of a connected product system.
 - Shadow maps: one, maximum 1,024 px desktop and 512 px reduced/mobile.
 - Bloom is not part of the initial implementation. A single subtle bloom pass may be tested later on high-quality desktop only and retained only if measured cost is acceptable.
 
-### 8.3 Geometry and rendering
+### 8.4 Geometry and rendering
 
 - Create the workstation and modules with boxes, rounded boxes, planes, lines, and instancing before commissioning a GLB.
 - Keep repeated nodes/particles instanced or batched.
@@ -490,18 +521,18 @@ The visual message is: an interface is one part of a connected product system.
 - Initial particle/data-node budget: 80-150 desktop, 30-60 mobile, with no transparent overdraw cloud.
 - Reuse geometries/materials and explicitly manage textures, render targets, loaders, and disposal.
 
-### 8.4 Canvas lifecycle
+### 8.5 Canvas lifecycle
 
 Use one `DeveloperUniverseCanvas` spanning the hero and Planify transition zone:
 
 - Lazy-load the canvas chunk after critical DOM content is committed; optionally schedule with `requestIdleCallback` plus a short maximum delay.
 - Keep it sticky/absolute only through the hero-to-Planify story, not fixed behind the entire page.
-- Pause or switch to demand rendering when offscreen, the document is hidden, reduced motion is active, or the scene is settled.
+- Pause or switch to demand rendering when offscreen, the document is hidden, reduced motion/static mode is active, or no visible full-tier operational state requires continuous frames.
 - Use `IntersectionObserver` and `visibilitychange` to control animation work.
 - Handle `webglcontextlost` and scene-load errors by replacing the canvas with a static composition.
 - Do not mount a second canvas for skills, project cards, certificates, or the AI panel.
 
-### 8.5 Choice comparison
+### 8.6 Choice comparison
 
 | Choice | Benefits | Risks | Decision |
 |---|---|---|---|
@@ -514,26 +545,29 @@ Use one `DeveloperUniverseCanvas` spanning the hero and Planify transition zone:
 
 ### 9.1 Hero to Planify
 
-The strongest cinematic transition should happen once:
+The portfolio's primary cinematic transition communicates: **"This developer universe produces real software - here is the product."**
 
-1. Hero loads with the workstation in a composed three-quarter view.
-2. As the user scrolls, the camera makes a short, bounded dolly toward the Planify monitor while nonessential modules spread/fade.
-3. The monitor aligns with the perspective of the incoming DOM browser/device frame.
-4. The WebGL monitor fades or masks out as the crisp HTML Planify case study takes ownership.
-5. Native scroll continues into normal DOM sections.
+1. The Developer Universe is visibly active in the Hero.
+2. As scroll begins, secondary system modules spread, recede, dim, or reorganize in a bounded composition.
+3. Data paths visually converge toward the Planify monitor.
+4. The camera performs a short, controlled dolly toward the Planify interface.
+5. The monitor grows and changes perspective toward the incoming DOM browser/device frame.
+6. WebGL and DOM synchronize briefly so the same product visual appears to move from the system scene into the readable case study.
+7. The crisp DOM Planify presentation assumes control without a visible discontinuity or dependency on the canvas.
+8. The WebGL scene is then reduced, demand-rendered, paused, or unmounted as appropriate to the chosen lifecycle.
 
-The transition should be progress-driven, reversible, and no longer than roughly one viewport of scroll. Do not pin the user in a long cinematic corridor.
+The transition remains progress-driven, reversible, native-scroll-based, and no longer than roughly one viewport of scroll. Use GSAP plus ScrollTrigger only where coordinated WebGL/DOM synchronization genuinely requires it. Do not introduce long pinning, scroll hijacking, nested page scrolling, or a cinematic corridor. Reduced-motion mode bypasses the choreography and transitions directly between stable Hero and Planify states.
 
 ### 9.2 Later sections
 
-- Selected Work: subtle depth reveal and pointer tilt only on fine pointers.
-- Engineering Stack: lines/nodes animate into connected states as the SVG/DOM map enters.
-- Journey: timeline progress line and calm staggered evidence blocks.
+- Selected Work: restrained scroll entrances, image masks/reveals, fine-pointer depth/tilt, and content-state transitions with focus/touch equivalents.
+- Engineering Stack: a signature DOM/SVG system composition in which paths assemble, related nodes activate together, and evidence changes the visible system state.
+- Journey: a progressive timeline/system path, restrained staggered evidence, and section-state transitions that connect business understanding to IT systems, software engineering, and product development.
 - Credentials: short reveal; certificate viewer opens without page transition.
-- AI: terminal/chat surface resolves from a system node motif, then behaves like a normal accessible application panel.
-- Contact: visual system simplifies and settles, signaling conclusion.
+- AI: the established AI/system node motif and data-line language resolve into the one accessible assistant surface, then the interface behaves like a normal application panel.
+- Contact: motion, node activity, depth, and visual complexity intentionally reduce so the system settles around a clear human CTA.
 
-Use CSS and IntersectionObserver for simple reveals. Reserve GSAP ScrollTrigger for coordinated multi-element/camera sequences, not every fade-in.
+Later sections inherit the motion language established in Phase 3B so the result does not become an interactive Hero followed by a static conventional website. Use CSS and IntersectionObserver for simple reveals. Reserve GSAP ScrollTrigger for synchronization, scroll progress, sequencing, or WebGL/DOM handoffs where it is materially better than CSS; do not animate every element merely because it can be animated.
 
 ### 9.3 Scroll safeguards
 
@@ -542,6 +576,10 @@ Use CSS and IntersectionObserver for simple reveals. Reserve GSAP ScrollTrigger 
 - Avoid scroll snapping.
 - Recalculate triggers after fonts/assets settle and on responsive layout changes.
 - In reduced motion, remove scrub/pinning and use direct section state changes.
+
+### 9.4 Connected narrative and calm ending
+
+Section transitions should make the sequence **Identity → System → Product → Capability → Journey → AI → Contact** legible without requiring the visitor to understand the animation. The final contact region deliberately quiets the system: data activity subsides, spatial layers settle, decorative detail recedes, and the page resolves to **Franci Hoxha → software engineer → real work → clear contact path**.
 
 ## 10. Planify Flagship Specification
 
@@ -561,9 +599,11 @@ Do not use `Flagship SaaS Project`; the approved label is `Flagship Software Pro
 ### 10.2 Visual presentation
 
 - Use the actual 1,200 x 628 Planify dashboard screenshot as the first proof asset.
-- Present it in a large DOM browser/device frame with a small 3D perspective at entry, then settle nearly flat for readability.
+- Synchronize the incoming DOM browser/device frame with the Hero's WebGL monitor during the brief handoff, then settle the DOM frame nearly flat for readability.
 - Add 2-4 additional screenshots only when supplied/approved: booking flow, staff/role area, customer/public flow, and responsive/mobile/PWA view.
-- Use a layered interface stack to show product breadth, but do not show tiny illegible UI solely as decoration.
+- Use layered screenshot/product-story reveals and controlled entry perspective to show product breadth, but do not show tiny illegible UI solely as decoration.
+- Where confirmed evidence supports them, architecture/system paths may connect interface, API, data, mobile, and delivery responsibilities without inventing product topology.
+- Scroll-driven sequencing may progressively reveal the problem, Franci's role, capabilities, architecture, and delivery story. The complete DOM content remains readable and correctly ordered with motion disabled.
 - Keep important labels and capability descriptions outside the image.
 
 ### 10.3 Content blocks
@@ -591,6 +631,8 @@ The CV additionally claims multi-vendor, multi-location, real-time notifications
 - Its first screenshot is useful without hovering.
 - Every capability is traceable to confirmed data.
 - The section works with the WebGL transition disabled.
+- The section feels like exploring a real software product produced by the Developer Universe, not reading a large project card.
+- The WebGL/DOM handoff and layered product sequence are reviewed live in a real browser for both scroll directions; screenshots remain required for stable, fallback, and responsive states but do not prove transition quality.
 - Link status and external-link labeling are verified.
 - Images have dimensions, meaningful alt text, responsive `srcset`/formats where applicable, and no avoidable layout shift.
 
@@ -612,7 +654,8 @@ The CV additionally claims multi-vendor, multi-location, real-time notifications
 
 ### 11.3 Shared interaction rules
 
-- Perspective/tilt maximum 2-3 degrees and only for fine pointers.
+- Fine-pointer depth/tilt uses a restrained, tunable envelope that preserves legibility and the clear secondary hierarchy.
+- Image masks/reveals, content-state transitions, and restrained scroll entrances may add tactile quality when they expose real project information rather than decorative novelty.
 - Metadata animations should reveal role, problem, stack, and status; not decorative counters.
 - The entire card must not become one ambiguous link if it also contains multiple controls.
 - Hover enhancements must have focus and touch equivalents.
@@ -622,13 +665,16 @@ The CV additionally claims multi-vendor, multi-location, real-time notifications
 
 ### 12.1 Recommended approach
 
-Build an **Interactive Engineering System Map** with semantic DOM nodes and an SVG connection layer. This provides the constellation concept without a second renderer.
+Build an **Interactive Engineering System Map** with semantic DOM nodes and an SVG connection layer. This is one of the portfolio's signature interactive sections and should feel like a functioning software-system diagram without adding a second renderer.
 
 - Center: `FULL-STACK`.
-- Four primary clusters: Frontend, Backend, Data, Engineering/Delivery.
+- Connected system clusters: Frontend, Backend/APIs, Data, Mobile, AI, and Engineering/Delivery, weighted according to confirmed evidence rather than presented as equal expertise.
+- A natural `Languages` group contains JavaScript, TypeScript, Python, and Java as cross-cutting implementation languages.
 - Product capability appears as a cross-cutting band rather than another logo cloud.
 - Each technology is a real button or focusable disclosure trigger.
 - Hover/focus/tap opens a concise evidence panel explaining how the capability is used.
+- Hover, focus, and tap states propagate through related nodes and activate the relevant connection paths so frontend/backend/data/mobile/AI relationships become visible.
+- Entry may assemble or activate the system in a bounded sequence; subsequent interaction changes system state rather than replaying decorative animation.
 
 Examples of evidence-led disclosures:
 
@@ -645,20 +691,21 @@ Examples of evidence-led disclosures:
 - The detail panel updates with an appropriate heading and `aria-live="polite"` only if needed; avoid announcing pointer-only movement.
 - Mobile defaults to an accordion/list; the map may simplify to a vertical system path.
 - No content is available only by hover.
+- Keyboard focus produces the same related-node, path-activation, and evidence-panel state as pointer interaction; motion is reduced or removed without losing those relationships.
 
 ### 12.3 Skill admission rule
 
 The capability inventory is reconciled for planning:
 
-- Frontend: JavaScript, TypeScript, React, Next.js, HTML, CSS, responsive interfaces, frontend/backend integration, and PWA-related work.
-- Backend/APIs: Node.js-style API development, REST APIs, Python, FastAPI, authentication, authorization, and application/business logic.
+- Languages: JavaScript, TypeScript, Python, and Java. Java is confirmed but secondary; its placement must not imply expert-level Java, professional Java employment, or fabricated Java projects.
+- Frontend: React, Next.js, HTML, CSS, responsive interfaces, frontend/backend integration, and PWA-related work.
+- Backend/APIs: Node.js-style API development, REST APIs, FastAPI, authentication, authorization, and application/business logic.
 - Data: MongoDB, database-backed application development, MySQL, and SQL Server where relevant.
 - Engineering/Delivery: Git, testing, debugging, deployment, production hardening, application integration, and troubleshooting.
 - Mobile: broad mobile application development is confirmed; do not name a native stack until technology-specific evidence is reconciled.
 - AI: AI integration and AI-assisted development are confirmed when grounded in the portfolio assistant, software integrations/workflows, and supplied AI credentials. Do not imply machine-learning engineering, model training, data science, or LLM research.
-- Java: retain only as a secondary broader skill unless stronger project evidence supports higher prominence.
 
-Confirmation establishes eligibility, not mastery. Every visible node still needs a short usage/evidence statement, and the map should prioritize the strongest practical stack instead of giving every technology equal visual weight. Do not add fashionable logos merely to make the map look fuller.
+Do not create a standalone visual category called `Additional Engineering Language`. Confirmation establishes eligibility, not mastery. Every visible node still needs a short usage/evidence statement, and the map should prioritize the strongest practical stack instead of giving every technology equal visual weight. Do not add fashionable or unsupported technologies merely to make the map look fuller.
 
 ## 13. Experience and Journey
 
@@ -666,13 +713,15 @@ Confirmation establishes eligibility, not mastery. Every visible node still need
 
 The section should communicate this progression:
 
-**Business understanding -> IT systems -> Software engineering -> Product development**
+**Business understanding → IT systems → Software engineering → Product development**
 
 This is a strength: business education helps frame workflows; IT support contributes troubleshooting, reliability, system awareness, and user empathy; software engineering turns those foundations into products.
 
 ### 13.2 Presentation
 
 - Use one chronological/causal journey rather than separate education and experience card columns.
+- Give the progression a connected visual path that advances from business understanding through IT systems and software engineering into product development.
+- Use a progressive timeline/system path, restrained staggered evidence, and section-state or spatial/graphical transitions to show causality between stages. Do not reduce the Journey to generic cards appearing one after another.
 - Each stop contains period, verified role/degree, organization only if confirmed, 1-2 evidence statements, and a short connection to the next stage.
 - Give the Computer Technician & IT Support period meaningful space. Confirmed responsibilities may include Windows/macOS/Linux support, hardware/software troubleshooting, operations, backup/recovery, and end-user support.
 - Do not invent an employer from the current generic `Technical Support and Systems Operations` label.
@@ -734,6 +783,8 @@ Consolidate to **one assistant experience with multiple launch points**:
 All entry points open or focus the same `AssistantPanel` and shared conversation state. Do not keep independent embedded and floating chat sessions.
 
 The full AI section remains in the information architecture because it explains a meaningful differentiator and offers recruiter-specific prompts, but it should not mount a second complete chat client. On desktop the one panel may be visually docked in the section when appropriate; on mobile it should use one accessible dialog/sheet.
+
+The assistant must be visually native to the Developer Universe. The established AI/system node motif, connection lines, depth cues, and data-flow language may resolve into the assistant surface so it feels like a system component becoming interactive rather than an unrelated widget attached to the page. This visual integration must not change the one-session architecture or weaken dialog semantics, focus management, multilingual behavior, endpoint security, or graceful failure.
 
 ### 15.2 Suggested prompts
 
@@ -869,31 +920,44 @@ Guidelines:
 
 ## 18. Motion System
 
-### 18.1 Timing
+The site-wide motion language prevents the experience from becoming an interactive Hero followed by a static normal website. Motion communicates system behavior: relationships, hierarchy, data flow, spatial depth, navigation, or state. Continuous movement is allowed only when its semantic role, visual hierarchy, and runtime cost remain clear.
+
+### 18.1 Motion hierarchy
+
+- **Level A - microinteractions:** buttons, links, controls, chips, navigation, AI triggers, disclosures, focus, hover, and press states.
+- **Level B - section interactions:** content reveals, image depth and masks, connected SVG paths, timeline progress, project interaction, and visible system-state changes.
+- **Level C - signature spatial storytelling:** a small number of high-value sequences - the Hero entrance, the Hero-to-Planify handoff, and potentially one Engineering System Map composition/reveal when justified.
+
+Use CSS and IntersectionObserver for simple motion. Use GSAP only when synchronization, scroll progress, sequencing, or WebGL/DOM handoff makes the result materially better. Do not animate every element simply because it can be animated, and do not give simultaneous visual priority to multiple motion levels.
+
+### 18.2 Timing
 
 - Micro interactions: 120-220 ms.
 - Component entrances/state transitions: 280-480 ms.
 - Hero/Planify cinematic movement: approximately 700-1,200 ms when time-based, or bounded scroll progress.
-- Idle scene cycles: 8-20 seconds with very small amplitude.
+- Operational idle cycles: typically 6-20 seconds with restrained, perceptible amplitude and varied phase; individual data-node travel or connection pulses may be shorter when they clearly communicate flow.
 
-### 18.2 Easing
+Timing is tuned in the browser rather than accepted from numeric compliance alone. Motion should be perceptible, responsive, and composed without rushing content or making the interface feel delayed.
+
+### 18.3 Easing and interpolation
 
 - Primary entrance: CSS `cubic-bezier(0.22, 1, 0.36, 1)` / GSAP `power3.out`.
 - State/camera transitions: `power2.inOut`.
 - Exit: shorter and quieter than entry.
 - Avoid bounce, elastic, large overshoot, and simultaneous motion in every layer.
+- Pointer and camera response use damping, bounded targets, depth-weighted non-linear response, and calm return behavior rather than direct position mapping.
 
-### 18.3 Motion hierarchy
+### 18.4 Reduced-motion and static equivalence
 
-- Level 1: focus, hover, press, chip/panel state.
-- Level 2: section/image reveal and project depth.
-- Level 3: the single hero-to-Planify camera story.
+No long intro sequence or percentage loader. Reduced-motion mode removes parallax, scrub/pinning, auto-moving particles, animated gradients, and smooth programmatic scrolling; it uses immediate or short state changes between intentional compositions. Static/no-WebGL alternatives preserve information, hierarchy, and visual authorship rather than serving as error leftovers.
 
-No long intro sequence or percentage loader. Reduced-motion mode removes parallax, scrub, auto-moving particles, animated gradients, and smooth programmatic scrolling.
-
-### 18.4 Cursor decision
+### 18.5 Cursor decision
 
 Do not implement a custom cursor in the first release. Native cursor/focus behavior is clearer and lower risk. A small optional pointer aura or magnetic offset may be prototyped after accessibility/performance QA, only on fine pointers, without hiding/replacing the native cursor.
+
+### 18.6 Calm ending
+
+Contact intentionally reduces motion density, node activity, perspective, and system complexity. The visual system settles rather than stops abruptly, leaving the final impression centered on Franci Hoxha, software engineering, real work, and an obvious contact path. Any remaining motion must support the CTA instead of competing with it.
 
 ## 19. Responsive and Mobile Strategy
 
@@ -1011,7 +1075,7 @@ These are engineering gates to validate, not guaranteed public claims:
 
 - Adaptive DPR/quality with a one-way fallback to prevent oscillation.
 - Pause/offscreen-demand rendering via intersection and visibility state.
-- Stop frame loops when settled; invalidate only on interaction where feasible.
+- Outside approved visible full-tier operational activity, stop frame loops when settled and invalidate only on interaction where feasible; continuous frames are never justified merely by decorative drift.
 - Reuse/instance geometries and materials.
 - Dispose obsolete geometries, materials, textures, render targets, controls, and loaders; inspect `renderer.info` during QA.
 - KTX2/Basis texture compression only if real texture assets justify the toolchain; procedural scene may not need it.
@@ -1122,7 +1186,7 @@ Any deletion occurs only after a later reference audit and explicit implementati
 - Abstract interface panels.
 - Lighting environment and emissive accents.
 - Browser/device frames around real screenshots.
-- Engineering constellation SVG paths.
+- Engineering System Map SVG paths.
 
 ### 24.6 Naming conventions
 
@@ -1246,7 +1310,7 @@ Lock compatible versions during the implementation spike, run bundle analysis, a
 
 ## 27. Implementation Phases
 
-Each phase is independently reviewable. Do not begin high-cost 3D polish before content, DOM structure, and fallback behavior are approved.
+Each phase is independently reviewable. Do not begin high-cost 3D polish before content, DOM structure, and fallback behavior are approved. Phase 3B establishes the global interaction and motion language inherited by later phases; those phases must apply it proportionately rather than reverting to static section templates.
 
 ### Phase 0 - Audit, content reconciliation, and baseline lock
 
@@ -1287,30 +1351,44 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 | Performance | Critical hero has no blocking 3D; static asset tightly compressed; dimensions reserve layout. |
 | Risks | Fallback may diverge from later scene; derive it from the same approved composition. |
 
-### Phase 3 - 3D hero implementation and polish
+### Phase 3 - 3D hero foundation
 
 | Field | Plan |
 |---|---|
-| Objective | Add the meaningful developer-workspace scene without weakening the hero. |
-| Exact scope | Lazy R3F canvas, procedural workstation, Planify monitor, system nodes/links, materials, lighting, idle motion, pointer parallax, adaptive quality, context failure. |
+| Objective | Establish the robust technical and visual foundation for the meaningful developer-workspace scene without weakening the Hero. |
+| Exact scope | One lazy R3F canvas, procedural workstation, Planify monitor, system nodes/links, materials, lighting, baseline animation/interaction hooks, adaptive quality, context failure, and lifecycle controls. Phase 3 proves the architecture; Phase 3B owns the signature interaction refinement. |
 | Likely files | `src/three/*`, `src/hooks/useSceneQuality.*`, `src/data/scene.*`, Hero scene boundary. |
 | Dependencies | `three`, R3F v9, selected Drei; no GSAP required until transition if CSS/R3F state suffices. |
-| Acceptance criteria | One canvas; stable 60 fps target on representative desktop and acceptable 30+ fps reduced tier; no content dependency; no context leaks after navigation/HMR. |
+| Acceptance criteria | One canvas; stable 60 fps target on representative desktop and acceptable 30+ fps reduced tier; no content dependency; correct full/reduced/static contracts; no context leaks after navigation/HMR. |
 | Tests/validation | Performance profiles, `renderer.info`, context-loss test, reduced/mobile/static tiers, tab visibility, memory repeat test. |
 | Performance | Enforce draw/triangle/DPR/light/texture budgets; pause offscreen/hidden. |
 | Risks | GPU variability, StrictMode lifecycle issues, material overdraw. Downgrade early and avoid postprocessing. |
+
+### Phase 3B - Interactive Hero & Motion Language
+
+| Field | Plan |
+|---|---|
+| Objective | Refine the technically completed 3D Hero into the first signature interactive experience and establish the motion language used by later phases. |
+| Exact scope | Stronger layered pointer response; damped scene/camera depth; intentional canvas entrance; meaningful workstation idle animation; moving data nodes; connection/data-flow pulses; restrained interface/system micro-animation; localized reactions; subtle Hero exit/recession behavior; full-quality desktop tuning; a significantly calmer reduced tier; and preservation of static/reduced-motion/no-WebGL behavior. Do not implement the full Hero-to-Planify handoff; Phase 4 owns that coordinated transition. |
+| Likely files | Existing `src/three/*`, scene configuration, Hero scene boundary, and existing motion/quality hooks. No new canvas or architecture redesign. |
+| Dependencies | Completed Phase 3 foundation and accepted Hero DOM/fallback. Prefer current R3F/Three primitives and `useFrame` before any additional runtime dependency. |
+| Acceptance criteria | The Hero clearly feels alive in real desktop use; pointer response is perceptible without cursor chasing; motion communicates a connected software system; full/reduced/static tiers remain correct; reduced motion and no-WebGL states remain intentional; approved performance targets hold; short-laptop and mobile usability remain intact. |
+| Tests/validation | Performance and renderer diagnostics; pointer/idle/initial-scroll review; keyboard and CTA checks; reduced-motion/no-WebGL/context-loss tests; short-laptop/mobile layouts; and a short real-browser screen recording showing entrance, idle behavior, pointer response, and initial scroll recession. Screenshots remain required for layout/fallback states but do not prove motion quality. |
+| Performance | Stay within existing draw-call, triangle, DPR, lighting, texture, bundle, and frame-rate budgets; pause offscreen/hidden; use reduced node/update counts outside full quality. No postprocessing unless separately justified by measured visual benefit and budget evidence. |
+| Risks | Over-amplified interaction can distract from copy or regress GPU cost. Tune in live review against perceptibility, smoothness, hierarchy, responsiveness, semantic purpose, and recruiter comprehension. |
 
 ### Phase 4 - Planify flagship storytelling
 
 | Field | Plan |
 |---|---|
-| Objective | Make Planify the unmistakable proof of full-product capability. |
-| Exact scope | Large case-study DOM, verified content, screenshot system, role/capability/architecture blocks, live link, hero-monitor transition. |
+| Objective | Make Planify the unmistakable proof-point produced by the Developer Universe and the portfolio's primary cinematic product story. |
+| Exact scope | Short reversible Hero-to-Planify WebGL/DOM synchronization; converging system paths; bounded camera dolly; monitor-to-DOM perspective handoff; large readable case-study DOM; layered screenshot/product-story reveals; verified problem/role/capability/architecture/delivery sequencing; and confirmed live link. No fabricated functionality or topology. |
 | Likely files | `src/sections/PlanifyFlagship/*`, `src/three/scenes/*`, project data/assets, GSAP timeline module. |
 | Dependencies | Approved Planify claims/screenshots; GSAP/ScrollTrigger. |
-| Acceptance criteria | Section works without canvas; transition is short/reversible; screenshot readable; all claims approved; Planify dominates hierarchy. |
-| Tests/validation | Scroll both directions, anchor jump, resize/refresh, reduced motion, slow image, link/alt testing. |
-| Performance | Limit pinned/scrub distance; lazy additional screenshots; no extra canvas. |
+| Acceptance criteria | Section works without canvas; transition is short, reversible, synchronized, and memorable; DOM content remains readable without animation; screenshots remain useful; all claims are approved; Planify dominates hierarchy and feels like an explored software product rather than a large card. |
+| Tests/validation | Scroll both directions, anchor jump, resize/refresh, reduced motion, slow image, link/alt testing, and a short real-browser recording showing the complete Hero-to-Planify handoff and stable responsive/reduced alternatives where relevant. |
+| Bundle/chunk discipline | Treat the completed Phase 3 lazy 3D scene baseline of approximately 244.44 kB gzip as already near the approximately 250 kB target. Preserve lazy loading and deliberate code splitting. Where practical, keep GSAP/ScrollTrigger and transition choreography in a selective, lazily loaded transition/animation chunk rather than silently folding that cost into the 3D scene/runtime chunk. Report core initial JS, the 3D scene/runtime chunk, and the transition/animation chunk separately before and after Phase 4. Optimize first or obtain explicit approval before accepting a meaningful budget regression; do not weaken the existing targets simply to accommodate GSAP. |
+| Performance | Limit pinned/scrub distance; lazy-load additional screenshots; use selective GSAP/ScrollTrigger imports and load transition code only when appropriate; add no extra canvas. |
 | Risks | Transition alignment across aspect ratios; build breakpoint-specific scene states rather than one brittle timeline. |
 
 ### Phase 5 - Selected Work
@@ -1318,10 +1396,10 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 | Field | Plan |
 |---|---|
 | Objective | Present BarberSpot and charging-station work with premium but secondary weight. |
-| Exact scope | Two project stories/cards, confirmed status/role/stack/capabilities, real screenshots or intentional diagrams, pointer/touch/focus interactions. |
+| Exact scope | Two project stories/cards, confirmed status/role/stack/capabilities, real screenshots or intentional diagrams, restrained scroll entrances, image masks/reveals, content-state transitions, and fine-pointer depth/tilt with touch/focus equivalents. |
 | Likely files | `src/sections/SelectedWork/*`, shared project data, `public/projects/*`. |
 | Dependencies | Confirmed project details and assets. |
-| Acceptance criteria | Clear status/CTA; no generic placeholder; keyboard/touch parity; no competition with Planify. |
+| Acceptance criteria | Clear status/CTA; no generic placeholder; premium tactile behavior with keyboard/touch parity; motion reveals evidence; no competition with Planify. |
 | Tests/validation | External links, missing-image fallback, card keyboard behavior, mobile layout. |
 | Performance | Lazy assets; no large video; CSS transform only for tilt. |
 | Risks | Missing assets/claims. Use honest architecture visuals and shorter copy rather than fabrication. |
@@ -1330,13 +1408,13 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 
 | Field | Plan |
 |---|---|
-| Objective | Replace generic skill cards with evidence-based capability exploration. |
-| Exact scope | DOM/SVG map, category clusters, evidence detail panel, mobile accordion/list, focus/touch interactions. |
+| Objective | Deliver a signature interactive software-system map that demonstrates evidence-based capability relationships. |
+| Exact scope | Central Full-Stack core; connected Frontend, Backend/API, Data, Mobile, AI, Engineering/Delivery, and Languages groupings; semantic DOM nodes; SVG paths; bounded assembly/reveal; related-node/path propagation on hover/focus/tap; evidence detail panel; and mobile accordion/list. No second WebGL canvas. |
 | Likely files | `src/sections/EngineeringStack/*`, capability data, SVG utilities. |
-| Dependencies | Confirmed stack/evidence; GSAP optional for entrance only. |
-| Acceptance criteria | All data accessible without hover/SVG; logical tab order; meaningful explanations; unconfirmed technologies absent. |
-| Tests/validation | Keyboard, touch, screen-reader labels, high contrast, reduced motion, 200% zoom. |
-| Performance | SVG line count bounded; no second WebGL canvas; animation stops after reveal. |
+| Dependencies | Confirmed stack/evidence and the Phase 3B motion language; GSAP only if synchronized composition/reveal materially benefits from it. |
+| Acceptance criteria | The map feels like a functioning system; related capability paths visibly respond; all data remains accessible without hover/SVG; keyboard/focus/touch parity is strong; node prominence matches evidence; Languages contains JavaScript, TypeScript, Python, and secondary Java without overclaiming; unconfirmed technologies are absent. |
+| Tests/validation | Keyboard, touch, screen-reader labels, high contrast, reduced motion, 200% zoom, and a short real-browser recording showing entry, hover/focus/tap propagation, evidence changes, and the mobile/responsive alternative where relevant. |
+| Performance | Bound SVG line/node counts and animation work; no second WebGL canvas; stop entry animation after reveal and update only on meaningful interaction. |
 | Risks | Visual complexity/readability. Default to clear categories and progressive disclosure. |
 
 ### Phase 7 - Journey and Credentials
@@ -1344,10 +1422,10 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 | Field | Plan |
 |---|---|
 | Objective | Tell the professional progression and add verified continuous-learning proof. |
-| Exact scope | Integrated journey timeline, confirmed IT/education copy, three credential cards, image optimization, accessible certificate viewer. |
+| Exact scope | Integrated connected journey path expressing Business understanding → IT systems → Software engineering → Product development; restrained staged evidence and section-state transitions; confirmed IT/education copy; three credential cards; image optimization; accessible certificate viewer. |
 | Likely files | `src/sections/Journey/*`, `src/sections/Credentials/*`, dialog component, `public/certificates/*`. |
 | Dependencies | Final Journey wording and relevant employment/education details; local placement of the certificate images already supplied externally. Certificate verification URLs are optional and do not block this phase. |
-| Acceptance criteria | No stale MSc wording; IT background has meaningful context; modal supports focus/Escape/mobile/original; metadata remains if image fails. |
+| Acceptance criteria | The progression is visibly connected rather than a sequence of generic cards; no stale MSc wording; IT background has meaningful context; motion preserves reading order; modal supports focus/Escape/mobile/original; metadata remains if image fails. |
 | Tests/validation | Dialog accessibility, certificate image/link fallback, mobile/zoom, date/content checks. |
 | Performance | Lazy thumbnails/full images; decode only opened certificate where practical. |
 | Risks | Raw certificate aspect/quality and personal data visible in images; review/crop only with authorization. |
@@ -1357,10 +1435,10 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 | Field | Plan |
 |---|---|
 | Objective | Deliver one reliable recruiter-focused assistant across hero, section, nav, and floating entry points. |
-| Exact scope | Shared chat provider/hook, one panel/dialog, suggested prompts, focus/error/retry behavior, prompt builder from canonical data, request validation, timeout, rate-limit integration, model env config. |
+| Exact scope | Shared chat provider/hook, one panel/dialog, suggested prompts, focus/error/retry behavior, prompt builder from canonical data, request validation, timeout, rate-limit integration, model env config, and a transition from the established AI/system node and data-line motif into the interactive assistant surface. |
 | Likely files | `src/components/ai/*`, `src/hooks/usePortfolioChat.*`, `src/sections/AiAssistant/*`, `api/chat.*`, `api/_lib/*`. |
 | Dependencies | Confirmed profile, approved provider/model/rate-limit choice; existing Markdown libraries retained. |
-| Acceptance criteria | One shared session; multilingual tests; no stale answer; bounded requests; safe failures; key remains server-only; AI-offline path still gives CV/contact. |
+| Acceptance criteria | The assistant feels native to the Developer Universe rather than attached as an unrelated widget; one shared session; accessible dialog behavior; multilingual tests; no stale answer; bounded requests; safe failures; key remains server-only; AI-offline path still gives CV/contact. |
 | Tests/validation | API unit tests, mocked upstream, English/Albanian/Italian manual prompts, prompt injection cases, timeout/429/5xx/empty reply, keyboard/dialog. |
 | Performance | Lazy-load chat Markdown UI if beneficial; no request until user acts; bounded history. |
 | Risks | Model availability/cost, prompt injection, privacy, latency. Feature must fail gracefully and never be required to read profile data. |
@@ -1369,25 +1447,25 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 
 | Field | Plan |
 |---|---|
-| Objective | Conclude the story with a strong professional contact path and complete metadata. |
-| Exact scope | `Let's build something useful.` contact section, confirmed channels, footer, OG/canonical/JSON-LD decision, favicon, no-JS fallback, copy polish. |
+| Objective | Let the software system settle into a calm, strong professional contact path and complete metadata. |
+| Exact scope | `Let's build something useful.` contact section; deliberate reduction of motion, depth, and system complexity; confirmed channels; footer; OG/canonical/JSON-LD decision; favicon; no-JS fallback; copy polish. |
 | Likely files | Contact/Footer sections, `index.html`, public icons/OG asset, shared contact data. |
 | Dependencies | Confirmed public contact channels, canonical domain, social profiles. |
-| Acceptance criteria | Email/LinkedIn/CV easy to find; no unconfirmed response-time/availability claim; metadata preview correct; brand returns top. |
+| Acceptance criteria | The ending feels intentional and human; email/LinkedIn/CV are easy to find; motion supports rather than competes with the CTA; no unconfirmed response-time/availability claim; metadata preview correct; brand returns top. |
 | Tests/validation | Mail/link/CV targets, metadata validators, favicon/social preview, keyboard, noscript review. |
 | Performance | OG assets not page-loaded; contact has no form/runtime dependency. |
 | Risks | Public phone/privacy choice; stale production URL. Block canonical/JSON-LD fields until confirmed. |
 
-### Phase 10 - Performance and accessibility hardening
+### Phase 10 - Global motion, performance, and accessibility hardening
 
 | Field | Plan |
 |---|---|
-| Objective | Treat performance/accessibility as release gates, not late polish. |
-| Exact scope | Bundle analysis, image/font/model optimization, adaptive thresholds, focus/contrast/motion audit, memory/frame profiling, fallbacks. |
+| Objective | Treat performance/accessibility as release gates while completing a coherent global motion and interaction-quality pass. |
+| Exact scope | Bundle analysis, image/font/model optimization, adaptive thresholds, focus/contrast/motion audit, memory/frame profiling, fallbacks, cross-section timing/hierarchy tuning, and confirmation that WebGL, DOM, SVG, typography, scroll, and microinteractions feel like one system. |
 | Likely files | Across app; quality config; asset pipeline; test config. |
 | Dependencies | All main sections feature-complete. |
-| Acceptance criteria | Budgets/targets met or documented tradeoff approved; no critical WCAG issue; no persistent offscreen rendering; stable memory. |
-| Tests/validation | Lighthouse checkpoints, axe signals, screen reader, keyboard, CPU/network throttling, GPU profiling, context-loss. |
+| Acceptance criteria | Budgets/targets met or documented tradeoff approved; no critical WCAG issue; no persistent offscreen rendering; stable memory; motion is perceptible, smooth, purposeful, responsive, coherent, and non-distracting across the full page. |
+| Tests/validation | Lighthouse checkpoints, axe signals, screen reader, keyboard, CPU/network throttling, GPU profiling, context-loss, and a short real-browser recording of the complete global motion/polish pass including idle, pointer, scroll, and representative responsive behavior. |
 | Performance | This phase owns final enforcement of Section 21. |
 | Risks | Late visual cuts. Measure in every earlier phase to avoid a last-minute downgrade. |
 
@@ -1468,7 +1546,20 @@ Do not treat the current lint failure as acceptable debt; configure server globa
 - No horizontal overflow at any matrix size.
 - CLS when fonts/images/canvas resolve.
 
-### 28.5 SEO/production checks
+### 28.5 Motion-specific live acceptance
+
+Static screenshots remain required for layout, fallback, responsive, reduced-motion, and stable visual-state verification, but they are not sufficient when interaction is a primary deliverable.
+
+Phase 3B Interactive Hero & Motion Language, Phase 4 Hero-to-Planify transition, Phase 6 Engineering System Map interaction, and Phase 10 global motion/polish each require a short real-browser screen recording or equivalent live review showing:
+
+- Idle behavior.
+- Pointer interaction on a fine-pointer device.
+- Scroll behavior and direction reversal where applicable.
+- Responsive transition behavior or the appropriate reduced/mobile alternative where relevant.
+
+Acceptance evaluates perceptibility, smoothness, timing, hierarchy, responsiveness, semantic purpose, visual quality, and whether the motion feels premium rather than distracting. Review must also confirm that controls remain usable, copy remains readable, motion does not obscure evidence, and reduced/static alternatives preserve the same professional narrative.
+
+### 28.6 SEO/production checks
 
 - Title, description, headings, canonical after confirmation, OG image/card.
 - Crawlable rendered project/contact content.
@@ -1484,10 +1575,14 @@ Do not treat the current lint failure as acceptable debt; configure server globa
 | 3D delays recruiter comprehension | High | DOM hero first, lazy canvas, no loading gate, static fallback. |
 | Persistent scene complexity | High | Limit one canvas to hero/Planify zone; pause/unmount later. |
 | Mobile GPU variability | High | Reduced/static tiers, adaptive DPR, no postprocessing, real-device QA. |
+| Creative ambition overwhelms recruiter comprehension | High | Keep identity, proof, CTAs, and meaning immediate in DOM; tune motion around the reading hierarchy and apply the 5-10 second recruiter test. |
+| Continuous scene activity wastes GPU/battery | High | Render continuous activity only while visible and justified in full quality; lower frequency/node count in reduced mode and eliminate it in static/reduced-motion modes. |
 | Stale/duplicated claims | High | Phase 0 content freeze and one shared data source/prompt builder. |
 | Planify claim overstatement | High | User/source verification; conservative role/capability wording. |
 | AI abuse/cost/model failure | High | Limits, timeout, rate control, env model, safe offline/contact fallback. |
 | Scroll choreography harms navigation | Medium-high | Native scroll, one short transition, reduced-motion path, no scroll snap/long pin. |
+| Motion is technically present but visually imperceptible or generic | Medium-high | Use tunable interaction envelopes and require live-browser recordings for Phases 3B, 4, 6, and 10; evaluate purpose, hierarchy, timing, and memorability rather than screenshots alone. |
+| Site becomes an interactive Hero followed by static sections | Medium | Later phases inherit the Phase 3B language through proportional section interaction while reserving signature spatial sequences for a small number of moments. |
 | GSAP/R3F lifecycle leaks | Medium | Scoped cleanup, one owner, StrictMode tests, renderer diagnostics. |
 | Bundle growth from Three/Drei/GSAP | Medium | Lazy chunks, selective imports, bundle inspection, reject duplicate Motion/Lenis. |
 | Secondary project assets are incomplete; supplied certificate images are not yet placed locally | Medium | Gate secondary visuals in Phase 5; place/optimize the already supplied certificate assets in Phase 7 and retain metadata fallback. |
@@ -1636,23 +1731,42 @@ These are **NON-BLOCKING FOR PHASE 0** and should be decided only before the fea
 
 The current CV remains downloadable and unchanged, but it is not the final authority for shared data, visible copy, AI context, SEO, structured data, or architecture diagrams. Replacing/updating it requires a separate authorized task.
 
-# Recommended First Implementation Phase
+## 32. Final Creative Standard
 
-After this master plan is reviewed and approved, begin with **Phase 0 - Audit, content reconciliation, and baseline lock**, not the 3D hero.
+The finished portfolio must pass all three tests below. Passing only the visual test or only the engineering test is not sufficient.
 
-Phase 0 may begin without waiting for Phase 5 project assets, Phase 7 certificate verification URLs, Phase 8 model/budget decisions, Phase 12 analytics/monitoring decisions, an optional photo, or optional cursor/polish experiments. Unresolved public fields should be represented as draft/hidden/null until their phase gate is answered.
+### 32.1 Recruiter test
 
-The first implementation change set should do exactly this:
+Within 5-10 seconds, can a visitor answer:
 
-1. Create the approved incremental-TypeScript `shared/portfolio` public data model, types, and validation with explicit published/draft/hidden handling.
-2. Populate the approved identity: Franci Hoxha, Full-Stack Software Developer, the exact hero statement, and `Web • Mobile • Backend • AI`.
-3. Record the Master's as completed in July 2026 and remove all current-student/`2024 - Present` wording. Keep the exact official English degree title draft/hidden until confirmed.
-4. Add the reconciled capability inventory with evidence fields and secondary prominence for Java; keep exact mobile stack wording draft until verified.
-5. Establish a conservative Planify public baseline that uses only approved current facts and categorically excludes online customer payments/prepayments and Polar.
-6. Centralize the current CV path without editing/replacing the CV, and add the three confirmed credential metadata records plus planned semantic paths for the externally supplied images; do not build the Credentials UI or add assets yet.
-7. Create a server-only AI prompt builder that serializes an allowlisted published subset from the same model; remove the manually duplicated professional biography from `api/chat`.
-8. Update existing visible copy, SEO data path, and AI context to remove stale current-student, Junior-led main-brand, SaaS-led hero, and payment-provider wording while preserving the current visual experience as much as practical.
-9. Fix ESLint's browser/server environment split, document `vercel dev`/environment setup and phase gates, and add focused content/prompt validation tests plus typechecking.
-10. Re-run build, lint, typecheck/tests, CV-link, and mocked/local AI endpoint smoke checks; record new bundle and screenshot baselines.
+- Who is Franci?
+- What does he build?
+- What is Planify?
+- Where can I see his work, CV, and contact path?
 
-This phase is a content/architecture change before visual redesign. Its acceptance gate is simple: the current site still works and looks substantially the same; every published professional fact comes from one approved source; the AI cannot drift from visible content; degree completion is correct; stale education, main-positioning, availability, and payment claims are absent; later-phase decisions are recorded without blocking unrelated work; and build/lint/typecheck/tests are clean. Phase 0 must not add Three.js/R3F or begin the visual redesign. Only then should Phase 1 establish the visual foundation and Phase 2/3 begin the hero and 3D work.
+### 32.2 Engineer test
+
+After deeper exploration, can a reviewer answer:
+
+- Is the work technically credible?
+- Do the architecture, performance, and accessibility choices demonstrate engineering discipline?
+- Are professional and product claims backed by real evidence?
+
+### 32.3 Creative test
+
+After interacting with the site, can a visitor answer yes to all of the following?
+
+- Does this feel unmistakably designed and engineered rather than assembled from a portfolio template?
+- Does the living software-system concept remain memorable?
+- Do motion, WebGL, DOM, SVG, typography, and scroll feel like one coherent experience?
+- Is there at least one interaction or transition the visitor is likely to remember after leaving?
+
+The final target is **a distinctive interactive software-engineering portfolio with creative-developer/Awwwards-level polish, without sacrificing professional credibility**. A visually extraordinary result is required inside the evidence, semantic DOM, one-canvas, fallback, reduced-motion, accessibility, native-scroll, performance, content-integrity, AI-security, and recruiter-comprehension constraints - never instead of them.
+
+# Next Planned Implementation Phase
+
+Phases 0-3 constitute the completed foundation for this roadmap. Their deliberate sequence - content truth and shared data first, then the semantic/design foundation, a fallback-first Hero, and finally the robust one-canvas 3D scene - remains the architectural rationale for why creative 3D refinement came later. It is historical context, not an instruction to restart Phase 0.
+
+The next planned implementation step is **Phase 3B - Interactive Hero & Motion Language** as defined in Section 27. Its change set should refine the existing Hero through stronger layered pointer response, scene/camera depth, meaningful operational activity, data movement and connection pulses, a polished entrance, subtle exit/recession behavior, and full/reduced/static tier tuning while preserving the accepted architecture and all accessibility/performance guardrails.
+
+Phase 3B must not implement the full Hero-to-Planify transition; that coordinated WebGL/DOM handoff remains Phase 4 scope. Phase 3B requires the live-browser motion evidence and acceptance criteria defined in Sections 7, 27, and 28. After Phase 3B is accepted, the roadmap proceeds to Phase 4 rather than revisiting the completed foundation unless a verified regression requires a targeted fix.
