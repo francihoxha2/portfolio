@@ -10,6 +10,7 @@ import './styles/utilities.css'
 import './styles/hero.css'
 import './styles/motion.css'
 import './styles/planify.css'
+import './styles/selected-work.css'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(

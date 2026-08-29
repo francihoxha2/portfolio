@@ -6,6 +6,7 @@ export default defineConfig({
   testDir: './tests/e2e',
   outputDir: join(tmpdir(), `portfolio-playwright-results-${process.pid}`),
   fullyParallel: true,
+  workers: 8,
   forbidOnly: true,
   retries: 0,
   reporter: 'list',

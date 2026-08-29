@@ -54,6 +54,55 @@ describe('canonical portfolio data', () => {
     expect(java?.evidence).toBeUndefined()
   })
 
+  it('keeps selected work limited to the confirmed project records', () => {
+    const selectedProjects = portfolio.projects.filter((project) => !project.featured)
+
+    expect(selectedProjects).toEqual([
+      {
+        id: 'barberspot',
+        title: 'BarberSpot.al',
+        category: 'Software Project',
+        description: 'BarberSpot.al is included in Franci’s selected software work.',
+        featured: false,
+        link: {
+          label: 'View BarberSpot',
+          href: 'https://barberspot.al',
+          external: true,
+          status: 'published',
+          verificationStatus: 'repository-current',
+        },
+        stack: [],
+        highlights: [],
+        status: 'published',
+        verificationStatus: 'confirmed',
+      },
+      {
+        id: 'charging-station',
+        title: 'Online Charging Station Management System',
+        category: 'Software Project',
+        description: 'A selected software project focused on charging-station management.',
+        featured: false,
+        link: {
+          label: 'Discuss the project',
+          href: '#contact',
+          external: false,
+          status: 'published',
+          verificationStatus: 'confirmed',
+        },
+        stack: [],
+        highlights: [],
+        status: 'published',
+        verificationStatus: 'confirmed',
+      },
+    ])
+
+    for (const project of selectedProjects) {
+      expect(project.previewAssetId).toBeUndefined()
+      expect(project.stack).toHaveLength(0)
+      expect(project.highlights).toHaveLength(0)
+    }
+  })
+
   it('rejects stale claims if they enter published data', () => {
     const invalid = structuredClone(portfolio) as PortfolioData
     invalid.projects[0].description = 'Uses Polar for payments.'
