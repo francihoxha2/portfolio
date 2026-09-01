@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import handler from '../api/chat.js'
+import handler from '../api/chat.ts'
 
 function createResponse() {
   return {

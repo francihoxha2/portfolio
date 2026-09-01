@@ -16,7 +16,7 @@
   },
   "include": [
     "shared/**/*.ts",
-    "api/_lib/**/*.ts",
+    "api/**/*.ts",
     "src/**/*.tsx",
     "tests/**/*.ts",
     "tests/**/*.tsx"

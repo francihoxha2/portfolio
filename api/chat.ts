@@ -10,6 +10,19 @@
 
 import { buildPortfolioSystemPrompt } from './_lib/buildPortfolioSystemPrompt.ts'
 
+interface ChatRequest {
+  headers: { origin?: string }
+  method?: string
+  body?: { messages?: unknown }
+}
+
+interface ChatResponse {
+  setHeader(name: string, value: string): void
+  status(code: number): ChatResponse
+  json(body: { error: string } | { reply: unknown }): ChatResponse
+  end(): ChatResponse
+}
+
 const OPENROUTER_MODEL = 'openai/gpt-oss-20b:free'
 
 const ALLOWED_ORIGINS = [
@@ -21,7 +34,7 @@ const ALLOWED_ORIGINS = [
 
 const SYSTEM_PROMPT = buildPortfolioSystemPrompt()
 
-export default async function handler(req, res) {
+export default async function handler(req: ChatRequest, res: ChatResponse) {
   const origin = req.headers.origin || ''
 
   // Set CORS headers — only allow listed origins

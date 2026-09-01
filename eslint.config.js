@@ -70,7 +70,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['shared/**/*.ts', 'api/_lib/**/*.ts', 'tests/**/*.ts'],
+    files: ['shared/**/*.ts', 'api/**/*.ts', 'tests/**/*.ts'],
     extends: [js.configs.recommended, tseslint.configs.recommended],
     languageOptions: {
       parser: tseslint.parser,
