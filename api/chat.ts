@@ -23,7 +23,7 @@ interface ChatResponse {
   end(): ChatResponse
 }
 
-const OPENROUTER_MODEL = 'openai/gpt-oss-20b:free'
+const OPENROUTER_MODEL = 'openrouter/free'
 
 const ALLOWED_ORIGINS = [
   'https://francihoxha.github.io',
