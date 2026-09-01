@@ -45,6 +45,13 @@ describe('Phase 5 selected work', () => {
     setMedia()
     const { container } = render(<SelectedWorkSection projects={selectedProjects} />)
 
+    expect(screen.getByRole('heading', { name: 'Selected Work' })).toBeTruthy()
+    expect(
+      screen.getByText(
+        'A few other projects I’ve built, each focused on a different problem and type of software.',
+      ),
+    ).toBeTruthy()
+    expect(container.textContent).not.toMatch(/quieter project|interaction footprint/i)
     expect(screen.getByRole('heading', { name: 'BarberSpot.al' })).toBeTruthy()
     expect(
       screen.getByRole('heading', { name: 'Online Charging Station Management System' }),
@@ -71,12 +78,12 @@ describe('Phase 5 selected work', () => {
     expect(chargingLink.hasAttribute('target')).toBe(false)
   })
 
-  it('provides a stable keyboard-operated evidence view', async () => {
+  it('provides a stable keyboard-operated project details view', async () => {
     setMedia()
     const user = userEvent.setup()
     render(<SelectedWorkSection projects={selectedProjects} />)
 
-    const inspectButton = screen.getAllByRole('button', { name: 'Inspect evidence' })[0]
+    const inspectButton = screen.getAllByRole('button', { name: 'Inspect details' })[0]
     inspectButton.focus()
     await user.keyboard('{Enter}')
 
@@ -95,7 +102,7 @@ describe('Phase 5 selected work', () => {
     fireEvent.pointerMove(article, { clientX: 120, clientY: 80 })
     expect(article.style.getPropertyValue('--selected-x')).toBe('')
 
-    await user.click(screen.getAllByRole('button', { name: 'Inspect evidence' })[0])
+    await user.click(screen.getAllByRole('button', { name: 'Inspect details' })[0])
     expect(article.dataset.evidenceState).toBe('revealed')
   })
 

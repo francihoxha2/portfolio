@@ -656,6 +656,12 @@
     grid-template-columns: 1fr;
     gap: 0.35rem;
   }
+
+  .contact-item a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+  }
 }
 
 @media (max-width: 22rem) {

@@ -9,7 +9,7 @@ export default function CredentialsSection({ credentials }) {
     >
       <div className="page-frame credentials-section__grid">
         <SectionHeading eyebrow="Credentials" title="Continuous learning" headingId="credentials-title">
-          Confirmed professional development in software engineering, AI-assisted coding, and AI.
+          My professional development includes software engineering, AI-assisted coding, and AI.
         </SectionHeading>
 
         <ul className="credential-list" aria-label="Selected credentials">

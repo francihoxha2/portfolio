@@ -3,8 +3,8 @@ import { expect, test, type Page } from '@playwright/test'
 const sectionIds = [
   'top',
   'work',
-  'selected-work',
   'stack',
+  'selected-work',
   'journey',
   'credentials',
   'ai',
@@ -13,6 +13,7 @@ const sectionIds = [
 
 const viewports = [
   { name: 'minimum phone', width: 320, height: 568 },
+  { name: 'small phone', width: 360, height: 640 },
   { name: 'phone', width: 375, height: 667 },
   { name: 'tall phone', width: 390, height: 844 },
   { name: 'large phone', width: 430, height: 932 },
@@ -45,7 +46,9 @@ test('semantic section order, identity, anchors, and skip link are correct', asy
     'Building modern software experiences, from idea to production.',
   )
   await expect(page.getByText('Web • Mobile • Backend • AI', { exact: true })).toBeVisible()
-  await expect(page.getByText('Java', { exact: true })).toBeVisible()
+  await expect(
+    page.locator('[data-testid="engineering-desktop-map"] [data-capability-id="java"] button'),
+  ).toContainText('Java')
   expect(await page.locator('canvas').count()).toBeLessThanOrEqual(1)
 
   await page.keyboard.press('Tab')
@@ -111,6 +114,32 @@ test('mobile menu supports focus, outside close, and Escape focus return', async
   await page.keyboard.press('Escape')
   await expect(toggle).toHaveAttribute('aria-expanded', 'false')
   await expect(toggle).toBeFocused()
+})
+
+test('mobile navigation closes after selection and does not retain stale breakpoint state', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/')
+
+  const toggle = page.locator('.menu-toggle')
+  const mobileNavigation = page.locator('#mobile-navigation')
+  await toggle.click()
+  await mobileNavigation.getByRole('link', { name: 'Stack' }).click()
+  await expect(page).toHaveURL(/#stack$/)
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  await expect(mobileNavigation).toBeHidden()
+
+  const headerHeight = await page.locator('.site-header').evaluate((header) =>
+    header.getBoundingClientRect().height,
+  )
+  const stackBox = await page.locator('#stack').boundingBox()
+  expect(stackBox?.y ?? 0).toBeGreaterThanOrEqual(headerHeight - 1)
+
+  await toggle.click()
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true')
+  await page.setViewportSize({ width: 1100, height: 700 })
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(mobileNavigation).toBeHidden()
 })
 
 for (const viewport of viewports) {

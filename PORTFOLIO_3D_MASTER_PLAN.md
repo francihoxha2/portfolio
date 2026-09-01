@@ -346,7 +346,7 @@ Do not lead with "Junior Full-Stack Developer." Junior/graduate context may appe
 
 - Short, direct, evidence-led sentences.
 - Prefer "Built X using Y to support Z" over "passionate about innovation."
-- Use first person in visible portfolio copy and third person in AI context.
+- Use natural first person in visible portfolio narrative when Franci presents his own work, projects, capabilities, experience, or approach. Do not expose internal `confirmed`, `verified`, `approved`, claim-ledger, or admission-rule language in visitor-facing prose. Third person remains appropriate for metadata, structured data, internal AI grounding, and assistant-owned interface copy where the assistant is the speaker.
 - Avoid "world-class," "expert," "revolutionary," "scalable" without proof, "real-time" without technical confirmation, and unquantified claims about businesses/users.
 - Do not overstate product ownership, seniority, scale, revenue, professional software years, or client relationships.
 
@@ -389,7 +389,7 @@ Every professional claim in the canonical data model must have an editorial stat
 | Git, testing, debugging, deployment, production hardening, application integration, and troubleshooting | **CONFIRMED** | Explain actual usage instead of displaying a generic tool inventory. |
 | Mobile application development | **CONFIRMED** | Keep Mobile as a top-level capability; exact mobile technologies remain targeted verification before technology-specific copy. |
 | AI integration and AI-assisted development | **CONFIRMED** | Ground in the portfolio assistant, software integration, coding workflows, and supplied credentials; do not imply ML/model-training/data-science expertise. |
-| Java | **CONFIRMED, SECONDARY** | May remain in the broader inventory but should not match the strongest practical stack's prominence without stronger project evidence. |
+| Java | **CONFIRMED** | Present as a normal primary language alongside JavaScript, TypeScript, and Python. Do not imply Java employment, production projects, years of experience, or expert-level mastery without evidence. |
 | Generic "Software Professional Course" / IT course | **NEEDS USER CONFIRMATION** | Verify provider, completion, and exact title or de-emphasize. |
 
 ## 6. Final Information Architecture
@@ -398,15 +398,15 @@ Every professional claim in the canonical data model must have an editorial stat
 
 1. **Hero / Developer Universe** (`#top`)
 2. **Planify - Flagship Software Project** (`#work`)
-3. **Selected Work** (`#selected-work`)
-4. **Engineering Stack** (`#stack`)
+3. **Engineering System Map** (`#stack`)
+4. **Selected Work** (`#selected-work`)
 5. **Experience / Journey** (`#journey`)
 6. **Credentials** (`#credentials`)
 7. **AI Portfolio Assistant** (`#ai`)
 8. **Contact** (`#contact`)
 9. **Footer**
 
-This order moves proof directly after identity, then explains capability, progression, selected credentials, the AI differentiator, and contact.
+This order moves from the flagship product into the engineering capabilities used to build software, then additional selected work, professional progression, selected credentials, the AI differentiator, and contact.
 
 ### 6.2 Navigation
 
@@ -697,7 +697,7 @@ Examples of evidence-led disclosures:
 
 The capability inventory is reconciled for planning:
 
-- Languages: JavaScript, TypeScript, Python, and Java. Java is confirmed but secondary; its placement must not imply expert-level Java, professional Java employment, or fabricated Java projects.
+- Languages: JavaScript, TypeScript, Python, and Java. Present all four as normal primary languages within this group. Java's equal placement does not imply expert-level mastery, professional Java employment, fabricated Java projects, or years of Java experience.
 - Frontend: React, Next.js, HTML, CSS, responsive interfaces, frontend/backend integration, and PWA-related work.
 - Backend/APIs: Node.js-style API development, REST APIs, FastAPI, authentication, authorization, and application/business logic.
 - Data: MongoDB, database-backed application development, MySQL, and SQL Server where relevant.
@@ -1412,7 +1412,7 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 | Exact scope | Central Full-Stack core; connected Frontend, Backend/API, Data, Mobile, AI, Engineering/Delivery, and Languages groupings; semantic DOM nodes; SVG paths; bounded assembly/reveal; related-node/path propagation on hover/focus/tap; evidence detail panel; and mobile accordion/list. No second WebGL canvas. |
 | Likely files | `src/sections/EngineeringStack/*`, capability data, SVG utilities. |
 | Dependencies | Confirmed stack/evidence and the Phase 3B motion language; GSAP only if synchronized composition/reveal materially benefits from it. |
-| Acceptance criteria | The map feels like a functioning system; related capability paths visibly respond; all data remains accessible without hover/SVG; keyboard/focus/touch parity is strong; node prominence matches evidence; Languages contains JavaScript, TypeScript, Python, and secondary Java without overclaiming; unconfirmed technologies are absent. |
+| Acceptance criteria | The map feels like a functioning system; related capability paths visibly respond; all data remains accessible without hover/SVG; keyboard/focus/touch parity is strong; node prominence matches evidence; Languages presents JavaScript, TypeScript, Python, and Java with equal primary treatment without inventing experience or projects; unconfirmed technologies are absent. |
 | Tests/validation | Keyboard, touch, screen-reader labels, high contrast, reduced motion, 200% zoom, and a short real-browser recording showing entry, hover/focus/tap propagation, evidence changes, and the mobile/responsive alternative where relevant. |
 | Performance | Bound SVG line/node counts and animation work; no second WebGL canvas; stop entry animation after reveal and update only on meaningful interaction. |
 | Risks | Visual complexity/readability. Default to clear categories and progressive disclosure. |
@@ -1679,7 +1679,7 @@ These are **NON-BLOCKING FOR PHASE 0** and should be decided only before the fea
 - Capability line: **Web • Mobile • Backend • AI**.
 - Planify label: **Flagship Software Project**.
 - Reconciled planning capabilities: JavaScript, TypeScript, React, Next.js, HTML, CSS, responsive/PWA-related work, Node.js-style APIs, REST, Python, FastAPI, authentication/authorization, application logic, MongoDB, MySQL, SQL Server, Git, testing, debugging, deployment, production hardening, application integration, troubleshooting, mobile application development, and evidence-grounded AI integration/AI-assisted development.
-- Java may remain in the broader inventory with deliberately lower prominence unless stronger project evidence supports it.
+- Java is a normal primary entry in the Languages group alongside JavaScript, TypeScript, and Python. Equal positioning does not authorize claims about Java employment, production projects, years of experience, or expert-level mastery.
 - Credentials: the three confirmed 2026 Udemy entries in Section 14, with externally supplied certificate images approved for later repository placement.
 
 ### 31.3 Existing copy that must be rewritten during Phase 0/1
@@ -1719,7 +1719,7 @@ These are **NON-BLOCKING FOR PHASE 0** and should be decided only before the fea
 
 ### 31.6 CV/app discrepancies and authority rule
 
-- CV includes Python and Java while the current app skills omit them; Python is now confirmed and Java is approved as a secondary broader skill.
+- CV includes Python and Java while the original app skills omitted them; both are now confirmed as normal primary entries in the Languages group. This positioning does not establish Java employment, production projects, years of experience, or expert-level mastery.
 - CV claims system administration; app uses broader systems operations wording.
 - CV claims support for medium-sized and large companies; app omits company scale.
 - CV uses `Full-Stack Developer`; the approved replacement is `Full-Stack Software Developer`, while the app still uses `Junior Full-Stack Developer`.

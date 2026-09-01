@@ -40,18 +40,50 @@ describe('canonical portfolio data', () => {
     }
   })
 
-  it('keeps Java visible as a confirmed secondary capability', () => {
+  it('uses the seven approved capability groups and exact language set', () => {
+    expect(portfolio.capabilityGroups.map((group) => group.title)).toEqual([
+      'Frontend',
+      'Backend / APIs',
+      'Data',
+      'Mobile',
+      'AI',
+      'Engineering / Delivery',
+      'Languages',
+    ])
+
+    const languages = portfolio.capabilityGroups.find((group) => group.id === 'languages')
+    expect(languages?.items.map((item) => item.label)).toEqual([
+      'JavaScript',
+      'TypeScript',
+      'Python',
+      'Java',
+    ])
+    expect(JSON.stringify(portfolio.capabilityGroups)).not.toContain(
+      'Additional Engineering Language',
+    )
+  })
+
+  it('keeps Java visible as a primary language without unsupported experience claims', () => {
     const java = portfolio.capabilityGroups
       .flatMap((group) => group.items)
       .find((item) => item.id === 'java')
 
     expect(java).toMatchObject({
       label: 'Java',
-      prominence: 'secondary',
+      prominence: 'primary',
       status: 'published',
       verificationStatus: 'confirmed',
     })
-    expect(java?.evidence).toBeUndefined()
+    expect(java?.evidence).toBe(
+      'I use Java as one of the programming languages in my development toolkit.',
+    )
+    expect(java?.evidence).not.toMatch(/employment|production project|years|expert/i)
+  })
+
+  it('keeps the flagship description in Franci\'s public first-person voice', () => {
+    const planify = portfolio.projects.find((project) => project.id === 'planify')
+
+    expect(planify?.description).toBe('Planify is my flagship software project.')
   })
 
   it('keeps selected work limited to the confirmed project records', () => {
@@ -62,7 +94,7 @@ describe('canonical portfolio data', () => {
         id: 'barberspot',
         title: 'BarberSpot.al',
         category: 'Software Project',
-        description: 'BarberSpot.al is included in Franci’s selected software work.',
+        description: 'BarberSpot.al is part of my selected software work.',
         featured: false,
         link: {
           label: 'View BarberSpot',
@@ -80,7 +112,8 @@ describe('canonical portfolio data', () => {
         id: 'charging-station',
         title: 'Online Charging Station Management System',
         category: 'Software Project',
-        description: 'A selected software project focused on charging-station management.',
+        description:
+          'One of my selected software projects focuses on charging-station management.',
         featured: false,
         link: {
           label: 'Discuss the project',

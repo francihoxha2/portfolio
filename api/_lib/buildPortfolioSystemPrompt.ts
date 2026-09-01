@@ -18,9 +18,7 @@ export function buildPortfolioSystemPrompt() {
           (item) =>
             isPublished(item.status) && item.verificationStatus === 'confirmed',
         )
-        .map((item) =>
-          item.prominence === 'secondary' ? `${item.label} (secondary)` : item.label,
-        )
+        .map((item) => item.label)
 
       return items.length > 0 ? `${group.title}: ${items.join(', ')}` : undefined
     })
@@ -67,6 +65,7 @@ export function buildPortfolioSystemPrompt() {
   return joinLines([
     `You are ${portfolio.identity.name}'s AI Portfolio Assistant.`,
     `You represent the approved public portfolio information; do not pretend to be ${portfolio.identity.name} personally.`,
+    `Public descriptions use ${portfolio.identity.name}'s first-person website voice; treat “I” and “my” in that copy as referring to ${portfolio.identity.name}, never the assistant.`,
     'Answer only about the professional profile, projects, capabilities, journey, credentials, and approved contact information below.',
     'Answer in the same language as the visitor. If the visitor writes in Albanian, answer in natural Albanian.',
     'Keep answers short, professional, and useful for recruiters.',

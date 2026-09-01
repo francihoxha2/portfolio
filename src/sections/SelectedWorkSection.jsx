@@ -154,8 +154,8 @@ function ProjectVisual({ project }) {
           <AbstractProjectVisual project={project} />
         )}
         <span className="selected-project__light" aria-hidden="true" />
-        <div className="selected-project__evidence" aria-label="Published project evidence">
-          <p>Evidence view</p>
+        <div className="selected-project__evidence" aria-label="Project visual details">
+          <p>Project details</p>
           <dl>
             <div>
               <dt>Type</dt>
@@ -173,8 +173,8 @@ function ProjectVisual({ project }) {
         </div>
       </div>
       <figcaption>
-        <span>{hasUsableImage ? 'Project image' : 'Evidence-led project visual'}</span>
-        <span>{hasUsableImage ? 'Published asset' : 'Abstract composition - not product UI'}</span>
+        <span>{hasUsableImage ? 'Project image' : 'Project-inspired visual'}</span>
+        <span>{hasUsableImage ? 'Project asset' : 'Abstract composition - not product UI'}</span>
       </figcaption>
     </figure>
   )
@@ -289,7 +289,7 @@ function SelectedProjectStory({ project, index, prefersReducedMotion }) {
             aria-describedby={evidenceId}
             onClick={() => setEvidencePinned((current) => !current)}
           >
-            <span>{evidencePinned ? 'Evidence view on' : 'Inspect evidence'}</span>
+            <span>{evidencePinned ? 'Project details on' : 'Inspect details'}</span>
             <span className="selected-project__inspect-icon" aria-hidden="true" />
           </button>
 
@@ -309,8 +309,8 @@ function SelectedProjectStory({ project, index, prefersReducedMotion }) {
         </div>
 
         <p id={evidenceId} className="selected-project__integrity-note">
-          Only confirmed project identity and link information are shown. The visual is
-          abstract unless a published project image is available.
+          I keep each project summary intentionally concise. The visual is abstract
+          unless a project image is available.
         </p>
       </div>
 
@@ -337,12 +337,12 @@ export default function SelectedWorkSection({ projects }) {
       <div className="page-frame selected-work-section__inner">
         <div data-selected-reveal>
           <SectionHeading
-            eyebrow="Selected Work"
-            title="Two quieter project stories"
+            eyebrow="Other Projects"
+            title="Selected Work"
             headingId="selected-work-title"
           >
-            Additional software work, presented with the same evidence discipline and a
-            deliberately lighter interaction footprint than the flagship.
+            A few other projects I’ve built, each focused on a different problem
+            and type of software.
           </SectionHeading>
         </div>
 

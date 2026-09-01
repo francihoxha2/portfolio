@@ -18,6 +18,23 @@ const EXPECTED_POSITIONING = {
   capabilityLine: 'Web • Mobile • Backend • AI',
 } as const
 
+const EXPECTED_CAPABILITY_GROUPS = [
+  ['frontend', 'Frontend'],
+  ['backend', 'Backend / APIs'],
+  ['data', 'Data'],
+  ['mobile', 'Mobile'],
+  ['ai', 'AI'],
+  ['engineering', 'Engineering / Delivery'],
+  ['languages', 'Languages'],
+] as const
+
+const EXPECTED_LANGUAGE_CAPABILITIES = [
+  ['javascript', 'JavaScript'],
+  ['typescript', 'TypeScript'],
+  ['python', 'Python'],
+  ['java', 'Java'],
+] as const
+
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(`Invalid portfolio data: ${message}`)
 }
@@ -60,7 +77,31 @@ export function validatePortfolio(data: PortfolioData): PortfolioData {
 
   for (const group of data.capabilityGroups) {
     assertUniqueIds(group.items, `capability group "${group.id}"`)
+    for (const item of group.items) {
+      if (isPublished(item.status)) {
+        assert(Boolean(item.evidence?.trim()), `capability "${item.id}" requires evidence`)
+      }
+    }
   }
+
+  assert(
+    JSON.stringify(data.capabilityGroups.map(({ id, title }) => [id, title]))
+      === JSON.stringify(EXPECTED_CAPABILITY_GROUPS),
+    'capability groups must match the approved Phase 6 system groups',
+  )
+
+  const languageCapabilities = data.capabilityGroups.find(
+    (group) => group.id === 'languages',
+  )
+  assert(Boolean(languageCapabilities), 'Languages capability group is required')
+  assert(
+    JSON.stringify(languageCapabilities?.items.map(({ id, label }) => [id, label]))
+      === JSON.stringify(EXPECTED_LANGUAGE_CAPABILITIES),
+    'Languages must contain exactly JavaScript, TypeScript, Python, and Java',
+  )
+
+  const java = languageCapabilities?.items.find((item) => item.id === 'java')
+  assert(java?.prominence === 'primary', 'Java must use primary language prominence')
 
   const assetIds = new Set(data.assets.map((asset) => asset.id))
   for (const project of data.projects) {

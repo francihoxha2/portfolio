@@ -5,7 +5,7 @@ export type VerificationStatus =
   | 'repository-current'
   | 'needs-confirmation'
 
-export type CapabilityProminence = 'primary' | 'supporting' | 'secondary'
+export type CapabilityProminence = 'primary' | 'supporting'
 
 export interface PortfolioIdentity {
   name: string

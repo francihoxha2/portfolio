@@ -20,6 +20,29 @@ test('Planify is a semantic flagship story using the approved product image', as
   await expect(page.locator('canvas')).toHaveCount(1)
   await expect(flagship.getByText('Flagship Software Project', { exact: true })).toBeVisible()
   await expect(flagship.getByRole('heading', { name: 'Planify.al' })).toBeVisible()
+  await expect(
+    flagship.getByText('Planify is my flagship software project.', { exact: true }),
+  ).toBeVisible()
+  await expect(
+    flagship.getByText(
+      'This is where the Developer Universe becomes real software—a product I’ve designed, built, and developed across the stack.',
+      { exact: true },
+    ),
+  ).toBeVisible()
+  await expect(flagship).not.toContainText('Planify is Franci’s flagship software project.')
+  await expect(flagship).not.toContainText('Approved screenshot')
+  await expect(
+    flagship.getByRole('heading', { name: 'Built as a complete product.' }),
+  ).toBeVisible()
+  await expect(
+    flagship.getByText(
+      'Planify brings customer booking, staff workflows, and business operations together in one connected experience.',
+      { exact: true },
+    ),
+  ).toBeVisible()
+  await expect(flagship).not.toContainText('semantic browser frame')
+  await expect(flagship).not.toContainText('settles nearly flat')
+  await expect(flagship).not.toContainText('for review')
   await expect(flagship.getByRole('img', { name: 'Planify dashboard preview' })).toHaveAttribute(
     'src',
     '/planify-preview.png',

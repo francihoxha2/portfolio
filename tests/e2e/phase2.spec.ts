@@ -78,7 +78,7 @@ test('hero actions follow the visual order and launch the assistant', async ({ p
   await expect(page.locator('.chat-panel .chat-input')).toBeFocused()
 })
 
-test('defers the floating AI launcher while the mobile hero actions are in view', async ({
+test('defers the floating AI launcher while the mobile Hero is in view', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 320, height: 568 })

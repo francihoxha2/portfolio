@@ -50,7 +50,7 @@ test('supports keyboard evidence exploration and deterministic fine-pointer dept
   const project = page.locator('[data-project-id="barberspot"]')
   await expect(project).toHaveAttribute('data-pointer-mode', 'fine')
   const inspect = project.locator('.selected-project__inspect')
-  await expect(inspect).toHaveAccessibleName('Inspect evidence')
+  await expect(inspect).toHaveAccessibleName('Inspect details')
   await inspect.focus()
   await page.keyboard.press('Enter')
   await expect(inspect).toHaveAttribute('aria-pressed', 'true')
@@ -59,9 +59,12 @@ test('supports keyboard evidence exploration and deterministic fine-pointer dept
 
   await page.keyboard.press('Enter')
   await expect(inspect).toHaveAttribute('aria-pressed', 'false')
-  const bounds = await project.boundingBox()
-  if (!bounds) throw new Error('BarberSpot project bounds are unavailable.')
-  await page.mouse.move(bounds.x + bounds.width * 0.82, bounds.y + bounds.height * 0.3)
+  const visual = project.locator('.selected-project__visual-stage')
+  const bounds = await visual.boundingBox()
+  if (!bounds) throw new Error('BarberSpot visual bounds are unavailable.')
+  await visual.hover({
+    position: { x: bounds.width * 0.82, y: bounds.height * 0.3 },
+  })
   await expect(project).toHaveAttribute('data-evidence-state', 'revealed')
   await expect
     .poll(() => project.evaluate((element) => element.style.getPropertyValue('--selected-x')))
@@ -81,7 +84,7 @@ test('coarse-pointer mobile stacks cleanly and keeps tap evidence available', as
 
   const project = page.locator('[data-project-id="barberspot"]')
   await expect(project).toHaveAttribute('data-pointer-mode', 'coarse')
-  await project.getByRole('button', { name: 'Inspect evidence' }).click()
+  await project.getByRole('button', { name: 'Inspect details' }).click()
   await expect(project).toHaveAttribute('data-evidence-state', 'revealed')
   await expect(project.getByText('External project site')).toBeVisible()
 
@@ -109,16 +112,17 @@ test('reduced motion keeps the complete composition static and operable', async 
   await expect(project).toHaveAttribute('data-pointer-mode', 'reduced')
   await expect(project).toHaveAttribute('data-revealed', 'true')
   await expect(project.locator('.selected-project__visual-frame')).toHaveCSS('transform', 'none')
-  await project.getByRole('button', { name: 'Inspect evidence' }).click()
+  await project.getByRole('button', { name: 'Inspect details' }).click()
   await expect(project).toHaveAttribute('data-evidence-state', 'revealed')
   await context.close()
 })
 
-test('continues from Planify into Selected Work through normal document scrolling', async ({ page }) => {
+test('continues from Planify through the Engineering map into Selected Work', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/#work')
 
   const planify = page.locator('#work')
+  const engineering = page.locator('#stack')
   const selectedWork = page.locator('#selected-work')
   const story = page.locator('.hero-planify-story')
   const scene = page.locator('.hero-scene-slot')
@@ -127,18 +131,24 @@ test('continues from Planify into Selected Work through normal document scrollin
 
   const flow = await page.evaluate(() => {
     const planifySection = document.querySelector<HTMLElement>('#work')!
+    const engineeringSection = document.querySelector<HTMLElement>('#stack')!
     const selectedSection = document.querySelector<HTMLElement>('#selected-work')!
     return {
       planifyBottom: planifySection.offsetTop + planifySection.offsetHeight,
+      engineeringTop: engineeringSection.offsetTop,
+      engineeringBottom: engineeringSection.offsetTop + engineeringSection.offsetHeight,
       selectedTop: selectedSection.offsetTop,
       selectedPosition: getComputedStyle(selectedSection).position,
       scrollSnapType: getComputedStyle(document.documentElement).scrollSnapType,
     }
   })
-  expect(flow.selectedTop).toBeGreaterThanOrEqual(flow.planifyBottom - 1)
+  expect(flow.engineeringTop).toBeGreaterThanOrEqual(flow.planifyBottom - 1)
+  expect(flow.selectedTop).toBeGreaterThanOrEqual(flow.engineeringBottom - 1)
   expect(flow.selectedPosition).toBe('relative')
   expect(flow.scrollSnapType).toBe('none')
 
+  await engineering.locator('.engineering-system__heading').scrollIntoViewIfNeeded()
+  await expect(engineering.locator('.engineering-system__heading')).toBeInViewport()
   await selectedWork.locator('.section-heading').scrollIntoViewIfNeeded()
   await expect(selectedWork.locator('.section-heading')).toBeInViewport()
   await expect(scene).toHaveAttribute('data-scene-active', 'false')

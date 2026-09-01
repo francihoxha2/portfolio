@@ -5,7 +5,7 @@ export default function JourneySection({ journey }) {
     <section id="journey" className="portfolio-section journey-section" aria-labelledby="journey-title">
       <div className="page-frame">
         <SectionHeading eyebrow="Journey" title="From business and systems to software" headingId="journey-title">
-          A progression through business education, practical IT support, and continued software development.
+          My journey brings together business education, practical IT support, and continued software development.
         </SectionHeading>
 
         <ol className="journey-list">

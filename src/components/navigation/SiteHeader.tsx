@@ -22,6 +22,18 @@ export default function SiteHeader({
   }, [isOpen])
 
   useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return undefined
+
+    const desktopQuery = window.matchMedia('(min-width: 64.01rem)')
+    const closeAtDesktopBreakpoint = (event: MediaQueryListEvent) => {
+      if (event.matches) setIsOpen(false)
+    }
+
+    desktopQuery.addEventListener('change', closeAtDesktopBreakpoint)
+    return () => desktopQuery.removeEventListener('change', closeAtDesktopBreakpoint)
+  }, [])
+
+  useEffect(() => {
     function closeFromKeyboard(event: KeyboardEvent) {
       if (event.key !== 'Escape' || !isOpen) return
 

@@ -14,9 +14,10 @@ export default function ChatWidget({ name }) {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [heroActionsVisible, setHeroActionsVisible] = useState(true)
+  const [heroVisible, setHeroVisible] = useState(true)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
+  const launcherRef = useRef(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -34,16 +35,34 @@ export default function ChatWidget({ name }) {
   }, [])
 
   useEffect(() => {
-    const heroActions = document.querySelector('.hero-section__actions')
-    if (!heroActions || !('IntersectionObserver' in window)) {
+    if (!isOpen) return undefined
+
+    const closeFromKeyboard = (event) => {
+      if (event.key !== 'Escape') return
+      setIsOpen(false)
+      window.requestAnimationFrame(() => launcherRef.current?.focus())
+    }
+
+    document.addEventListener('keydown', closeFromKeyboard)
+    return () => document.removeEventListener('keydown', closeFromKeyboard)
+  }, [isOpen])
+
+  function closeAssistant() {
+    setIsOpen(false)
+    window.requestAnimationFrame(() => launcherRef.current?.focus())
+  }
+
+  useEffect(() => {
+    const hero = document.querySelector('.hero-section')
+    if (!hero || !('IntersectionObserver' in window)) {
       return undefined
     }
 
     const observer = new IntersectionObserver(
-      ([entry]) => setHeroActionsVisible(entry.isIntersecting),
-      { threshold: 0.1 },
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0.02 },
     )
-    observer.observe(heroActions)
+    observer.observe(hero)
 
     return () => observer.disconnect()
   }, [])
@@ -93,6 +112,7 @@ export default function ChatWidget({ name }) {
           id="portfolio-assistant-dialog"
           className="chat-panel"
           role="dialog"
+          aria-modal="true"
           aria-label="AI Portfolio Assistant"
         >
           <div className="chat-header">
@@ -105,7 +125,7 @@ export default function ChatWidget({ name }) {
             </div>
             <button
               className="chat-close"
-              onClick={() => setIsOpen(false)}
+              onClick={closeAssistant}
               aria-label="Close chat"
             >
               ✕
@@ -165,7 +185,8 @@ export default function ChatWidget({ name }) {
       )}
 
       <button
-        className={`chat-fab${heroActionsVisible && !isOpen ? ' chat-fab--deferred' : ''}`}
+        ref={launcherRef}
+        className={`chat-fab${heroVisible && !isOpen ? ' chat-fab--deferred' : ''}`}
         onClick={() => setIsOpen(o => !o)}
         aria-label={isOpen ? 'Close AI assistant' : 'Open AI Portfolio Assistant'}
         aria-expanded={isOpen}

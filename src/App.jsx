@@ -61,8 +61,8 @@ function App() {
           project={featuredProject}
           capabilityGroups={capabilityGroups}
         />
-        <SelectedWorkSection projects={selectedProjects} />
         <EngineeringStackSection capabilityGroups={capabilityGroups} />
+        <SelectedWorkSection projects={selectedProjects} />
         <JourneySection journey={journey} />
         <CredentialsSection credentials={credentials} />
         <AiChat suggestions={portfolio.assistant.suggestedQuestions} />

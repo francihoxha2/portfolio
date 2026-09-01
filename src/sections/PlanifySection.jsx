@@ -62,8 +62,8 @@ export default function PlanifySection({ project, capabilityGroups = [] }) {
           <div className="flagship-section__positioning">
             <p className="flagship-section__lede">{project.description}</p>
             <p>
-              The Developer Universe resolves into a real product interface—the
-              abstract system becomes concrete software.
+              This is where the Developer Universe becomes real software—a product
+              I’ve designed, built, and developed across the stack.
             </p>
             {project.link ? (
               <a
@@ -108,16 +108,16 @@ export default function PlanifySection({ project, capabilityGroups = [] }) {
               </div>
               <figcaption>
                 <span>Actual product interface</span>
-                <span>Approved screenshot · 1200 × 628</span>
+                <span>Product screenshot · 1200 × 628</span>
               </figcaption>
             </figure>
 
-            <aside className="flagship-product__note" aria-label="Product proof">
-              <p className="flagship-product__index">01 / Product proof</p>
-              <h3>A real interface, kept readable.</h3>
+            <aside className="flagship-product__note" aria-label="Product overview">
+              <p className="flagship-product__index">01 / Product overview</p>
+              <h3>Built as a complete product.</h3>
               <p>
-                The same approved Planify image travels from the 3D monitor into
-                this semantic browser frame, then settles nearly flat for review.
+                Planify brings customer booking, staff workflows, and business
+                operations together in one connected experience.
               </p>
             </aside>
           </div>
@@ -128,9 +128,9 @@ export default function PlanifySection({ project, capabilityGroups = [] }) {
             <p className="flagship-product__index">02 / Engineering lens</p>
             <h3>One product story, viewed through the complete software path.</h3>
             <p>
-              Franci’s confirmed portfolio scope connects interface work,
-              application logic, data, and delivery. Planify is the flagship
-              proof point in that wider engineering practice.
+              My work connects interface development, application logic, data,
+              and delivery. Planify is the clearest example of how I bring those
+              pieces together into a real product.
             </p>
           </div>
 

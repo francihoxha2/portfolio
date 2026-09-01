@@ -10,7 +10,19 @@ describe('portfolio system prompt', () => {
     expect(prompt).toContain('Web • Mobile • Backend • AI')
     expect(prompt).toContain('Completed July 2026')
     expect(prompt).toContain('Flagship Software Project')
+    expect(prompt).toContain('Planify is my flagship software project.')
+    expect(prompt).toContain('Languages: JavaScript, TypeScript, Python, Java')
     expect(prompt).toContain('Complete Software Engineering Course')
+  })
+
+  it('grounds first-person public copy without turning the assistant into Franci', () => {
+    const prompt = buildPortfolioSystemPrompt()
+
+    expect(prompt).toContain(
+      'Public descriptions use Franci Hoxha\'s first-person website voice; treat “I” and “my” in that copy as referring to Franci Hoxha, never the assistant.',
+    )
+    expect(prompt).toContain('do not pretend to be Franci Hoxha personally')
+    expect(prompt).not.toMatch(/Java\s*\(secondary\)|secondary\s+Java/i)
   })
 
   it('excludes stale, unapproved, and unresolved claims', () => {
