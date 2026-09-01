@@ -34,12 +34,19 @@ describe('chat production runtime module graph', () => {
     const outDir = await mkdtemp(join(tmpdir(), 'portfolio-api-runtime-'))
 
     try {
+      const tsconfig = JSON.parse(
+        await readFile(resolve(projectRoot, 'tsconfig.json'), 'utf8'),
+      )
+
+      expect(tsconfig.compilerOptions.rewriteRelativeImportExtensions).toBe(true)
+
       const options = {
         target: ts.ScriptTarget.ES2022,
         module: ts.ModuleKind.NodeNext,
         moduleResolution: ts.ModuleResolutionKind.NodeNext,
         allowImportingTsExtensions: true,
-        rewriteRelativeImportExtensions: true,
+        rewriteRelativeImportExtensions:
+          tsconfig.compilerOptions.rewriteRelativeImportExtensions,
         rootDir: projectRoot,
         outDir,
         strict: true,
