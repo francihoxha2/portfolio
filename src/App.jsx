@@ -1,5 +1,6 @@
 import AiChat from './components/AiChat'
 import ChatWidget from './components/ChatWidget'
+import { AssistantProvider } from './components/ai/AssistantProvider.tsx'
 import SiteHeader from './components/navigation/SiteHeader'
 import ContactSection from './sections/ContactSection'
 import CredentialsSection from './sections/CredentialsSection'
@@ -50,31 +51,36 @@ const cvPath = assetsById.cv.src
 
 function App() {
   return (
-    <div className="app-shell">
-      <a className="skip-link" href="#main-content">Skip to content</a>
-      <SiteHeader identity={portfolio.identity} sections={navigation} cvPath={cvPath} />
+    <AssistantProvider>
+      <div className="app-shell">
+        <a className="skip-link" href="#main-content">Skip to content</a>
+        <SiteHeader identity={portfolio.identity} sections={navigation} cvPath={cvPath} />
 
-      <main id="main-content" className="page-content" tabIndex={-1}>
-        <HeroPlanifyStory
-          identity={portfolio.identity}
-          cvPath={cvPath}
-          project={featuredProject}
-          capabilityGroups={capabilityGroups}
-        />
-        <EngineeringStackSection capabilityGroups={capabilityGroups} />
-        <SelectedWorkSection projects={selectedProjects} />
-        <JourneySection journey={journey} narrative={portfolio.journeyNarrative} />
-        <CredentialsSection
-          credentials={credentials}
-          narrative={portfolio.credentialsNarrative}
-        />
-        <AiChat suggestions={portfolio.assistant.suggestedQuestions} />
-        <ContactSection contacts={contacts} />
-      </main>
+        <main id="main-content" className="page-content" tabIndex={-1}>
+          <HeroPlanifyStory
+            identity={portfolio.identity}
+            cvPath={cvPath}
+            project={featuredProject}
+            capabilityGroups={capabilityGroups}
+          />
+          <EngineeringStackSection capabilityGroups={capabilityGroups} />
+          <SelectedWorkSection projects={selectedProjects} />
+          <JourneySection journey={journey} narrative={portfolio.journeyNarrative} />
+          <CredentialsSection
+            credentials={credentials}
+            narrative={portfolio.credentialsNarrative}
+          />
+          <AiChat suggestions={portfolio.assistant.suggestedQuestions} />
+          <ContactSection contacts={contacts} />
+        </main>
 
-      <SiteFooter identity={portfolio.identity} sections={navigation} />
-      <ChatWidget name={portfolio.identity.name} />
-    </div>
+        <SiteFooter identity={portfolio.identity} sections={navigation} />
+        <ChatWidget
+          name={portfolio.identity.name}
+          suggestions={portfolio.assistant.suggestedQuestions}
+        />
+      </div>
+    </AssistantProvider>
   )
 }
 

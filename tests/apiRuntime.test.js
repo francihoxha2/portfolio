@@ -34,24 +34,26 @@ describe('chat production runtime module graph', () => {
     const outDir = await mkdtemp(join(tmpdir(), 'portfolio-api-runtime-'))
 
     try {
-      const tsconfig = JSON.parse(
-        await readFile(resolve(projectRoot, 'tsconfig.json'), 'utf8'),
+      const configPath = resolve(projectRoot, 'tsconfig.json')
+      const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
+      expect(configFile.error).toBeUndefined()
+      const parsedConfig = ts.parseJsonConfigFileContent(
+        configFile.config,
+        ts.sys,
+        projectRoot,
+        undefined,
+        configPath,
       )
-
-      expect(tsconfig.compilerOptions.rewriteRelativeImportExtensions).toBe(true)
+      expect(parsedConfig.errors).toEqual([])
+      expect(parsedConfig.options.rewriteRelativeImportExtensions).toBe(true)
 
       const options = {
-        target: ts.ScriptTarget.ES2022,
+        ...parsedConfig.options,
         module: ts.ModuleKind.NodeNext,
         moduleResolution: ts.ModuleResolutionKind.NodeNext,
-        allowImportingTsExtensions: true,
-        rewriteRelativeImportExtensions:
-          tsconfig.compilerOptions.rewriteRelativeImportExtensions,
+        noEmit: false,
         rootDir: projectRoot,
         outDir,
-        strict: true,
-        skipLibCheck: true,
-        types: ['node'],
       }
       const program = ts.createProgram({
         rootNames: [resolve(projectRoot, 'api/chat.ts')],
@@ -76,6 +78,8 @@ describe('chat production runtime module graph', () => {
       const emittedFiles = [
         'api/chat.js',
         'api/_lib/buildPortfolioSystemPrompt.js',
+        'api/_lib/validateChatRequest.js',
+        'shared/chat.js',
         'shared/portfolio.js',
         'shared/validatePortfolio.js',
       ]

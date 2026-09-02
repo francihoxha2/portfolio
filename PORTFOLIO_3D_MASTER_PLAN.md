@@ -1453,6 +1453,22 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 | Performance | Lazy-load chat Markdown UI if beneficial; no request until user acts; bounded history. |
 | Risks | Model availability/cost, prompt injection, privacy, latency. Feature must fail gracefully and never be required to read profile data. |
 
+#### Phase 8 implementation record - 2026-09-02
+
+- One page-level `AssistantProvider` owns the conversation messages, shared draft, pending request, visitor-safe error, retry target, and new-conversation action. The AI section and floating modal are presentation surfaces over that single controller; they do not synchronize independent chat arrays.
+- The session is intentionally memory-only for the lifetime of the mounted page. Scrolling, opening/closing the floating assistant, and moving between entry points preserve it. A refresh starts a new conversation. No `localStorage`, `sessionStorage`, account identifier, analytics identifier, or permanent conversation storage was added.
+- Entry behavior is deliberate: Hero `Ask My AI` opens the compact modal; the deferred floating launcher opens the same modal; navigation `Ask AI` lands on the richer inline AI section. None of these actions resets the session.
+- `New conversation` is available on both surfaces. It clears the shared messages, draft, error, retry target, and pending state everywhere, and aborts the browser request if one is active. Opening or closing the modal never invokes it.
+- The client permits one active request. A synchronous controller guard and disabled shared composer prevent repeated Enter/click submissions and cross-surface duplicates; no request queue or automatic provider retry was added.
+- Client history uses a deterministic recent suffix bounded to 12 messages and 8,000 total characters. If bounding would leave an orphaned leading assistant reply, that reply is removed. Each visitor message is capped at 1,500 characters, and the visible shared history is bounded by the same policy without a fabricated summary.
+- `/api/chat` accepts only JSON object bodies with a non-empty `messages` array, only `user` and `assistant` roles, text content with no unsupported control characters, and a final `user` message. A client `system`, `developer`, or `tool` role is rejected; the canonical system prompt remains server-owned.
+- Server request limits are 16 KiB serialized body, 12 messages, 1,500 characters per message, and 8,000 total message characters. Returned assistant text is capped at 1,500 characters. The upstream request retains `max_tokens: 300` and has a 12-second abort timeout.
+- `openrouter/free` remains the only router/model identifier. No paid or silent fallback was introduced. Automated tests mock `/api/chat` or the upstream `fetch` and consume no OpenRouter quota.
+- Errors distinguish local/request validation, oversized content, connection failure, and temporary service unavailability. Raw provider bodies, stack traces, routing details, and keys remain hidden. Retry is visitor-initiated and reuses the failed bounded request without appending a duplicate user message; contact remains available as a non-AI fallback.
+- The production and localhost CORS allowlist is unchanged. `OPENROUTER_API_KEY`, the system prompt, provider endpoint, and router configuration remain server-side. Markdown still renders without raw HTML and external answer links use safe new-tab attributes.
+- A globally reliable rate limit was not fabricated with serverless instance memory. Phase 8 relies on strict body/history limits, one client request at a time, the upstream timeout, and the existing free-router allowance. Platform-level firewall/rate limiting or a durable shared store remains an explicit production-infrastructure item for Phase 12 if traffic requires it.
+- The floating presentation is modal: focus enters the composer, Tab is contained, Escape and the explicit close action dismiss it, focus returns to the launcher, and background/page scroll is inert while open. The inline section remains non-modal. Mobile rules cover safe-edge spacing, 16 px composer text, viewport-height fitting, short landscape, nested-message overscroll containment, and reduced motion.
+
 ### Phase 9 - Contact, footer, SEO, and global polish
 
 | Field | Plan |
@@ -1775,8 +1791,6 @@ The final target is **a distinctive interactive software-engineering portfolio w
 
 # Next Planned Implementation Phase
 
-Phases 0-3 constitute the completed foundation for this roadmap. Their deliberate sequence - content truth and shared data first, then the semantic/design foundation, a fallback-first Hero, and finally the robust one-canvas 3D scene - remains the architectural rationale for why creative 3D refinement came later. It is historical context, not an instruction to restart Phase 0.
+Phases 0-8 now constitute the completed foundation, interaction, product-story, capability, Journey/Credentials, and shared AI-assistant work recorded in this roadmap. Their architectural rationale remains historical context, not an instruction to restart accepted phases unless a verified integration regression requires a targeted fix.
 
-The next planned implementation step is **Phase 3B - Interactive Hero & Motion Language** as defined in Section 27. Its change set should refine the existing Hero through stronger layered pointer response, scene/camera depth, meaningful operational activity, data movement and connection pulses, a polished entrance, subtle exit/recession behavior, and full/reduced/static tier tuning while preserving the accepted architecture and all accessibility/performance guardrails.
-
-Phase 3B must not implement the full Hero-to-Planify transition; that coordinated WebGL/DOM handoff remains Phase 4 scope. Phase 3B requires the live-browser motion evidence and acceptance criteria defined in Sections 7, 27, and 28. After Phase 3B is accepted, the roadmap proceeds to Phase 4 rather than revisiting the completed foundation unless a verified regression requires a targeted fix.
+The next planned implementation step is **Phase 9 - Contact, footer, SEO, and global polish** as defined in Section 27. Phase 9 has not begun as part of the Phase 8 implementation record.

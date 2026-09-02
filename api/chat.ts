@@ -1,25 +1,27 @@
 /**
  * Vercel Serverless Function — POST /api/chat
  *
- * Set OPENROUTER_API_KEY in Vercel:
- *   Vercel Dashboard → Your Project → Settings → Environment Variables
- *   Name:  OPENROUTER_API_KEY
- *   Value: sk-or-v1-...
- *   Environment: Production (and Preview if needed)
+ * OPENROUTER_API_KEY stays server-only in the Vercel environment.
  */
 
+import { CHAT_LIMITS } from '../shared/chat.ts'
 import { buildPortfolioSystemPrompt } from './_lib/buildPortfolioSystemPrompt.ts'
+import { validateChatRequest } from './_lib/validateChatRequest.ts'
 
 interface ChatRequest {
-  headers: { origin?: string }
+  headers: Record<string, string | string[] | undefined>
   method?: string
-  body?: { messages?: unknown }
+  body?: unknown
 }
 
 interface ChatResponse {
   setHeader(name: string, value: string): void
   status(code: number): ChatResponse
-  json(body: { error: string } | { reply: unknown }): ChatResponse
+  json(
+    body:
+      | { error: string; code?: string }
+      | { reply: string },
+  ): ChatResponse
   end(): ChatResponse
 }
 
@@ -34,10 +36,21 @@ const ALLOWED_ORIGINS = [
 
 const SYSTEM_PROMPT = buildPortfolioSystemPrompt()
 
-export default async function handler(req: ChatRequest, res: ChatResponse) {
-  const origin = req.headers.origin || ''
+function getHeader(req: ChatRequest, name: string) {
+  const value = req.headers[name] ?? req.headers[name.toLowerCase()]
+  return Array.isArray(value) ? value[0] : value ?? ''
+}
 
-  // Set CORS headers — only allow listed origins
+function serviceUnavailable(res: ChatResponse, status = 503) {
+  return res.status(status).json({
+    code: 'SERVICE_UNAVAILABLE',
+    error: 'AI service unavailable',
+  })
+}
+
+export default async function handler(req: ChatRequest, res: ChatResponse) {
+  const origin = getHeader(req, 'origin')
+
   if (ALLOWED_ORIGINS.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin)
   }
@@ -45,7 +58,6 @@ export default async function handler(req: ChatRequest, res: ChatResponse) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
   res.setHeader('Vary', 'Origin')
 
-  // Handle OPTIONS preflight request
   if (req.method === 'OPTIONS') {
     return res.status(204).end()
   }
@@ -54,29 +66,36 @@ export default async function handler(req: ChatRequest, res: ChatResponse) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { messages } = req.body ?? {}
-
-  if (!Array.isArray(messages) || messages.length === 0) {
-    return res.status(400).json({ error: 'messages must be a non-empty array' })
+  const contentType = getHeader(req, 'content-type').toLowerCase()
+  if (!contentType.startsWith('application/json')) {
+    return res.status(415).json({
+      code: 'UNSUPPORTED_MEDIA_TYPE',
+      error: 'Content-Type must be application/json',
+    })
   }
 
-  // Sanitise — only forward role + content to OpenRouter
-  const sanitised = messages
-    .filter(m => m && typeof m.role === 'string' && typeof m.content === 'string')
-    .map(m => ({ role: m.role, content: m.content }))
-
-  if (sanitised.length === 0) {
-    return res.status(400).json({ error: 'No valid messages found' })
+  const validation = validateChatRequest(req.body)
+  if (!validation.ok) {
+    return res.status(validation.status).json({
+      code: validation.code,
+      error: validation.error,
+    })
   }
 
   const apiKey = process.env.OPENROUTER_API_KEY
-  if (!apiKey) {
-    return res.status(500).json({ error: 'Service configuration error' })
-  }
+  if (!apiKey) return serviceUnavailable(res)
+
+  const controller = new AbortController()
+  let timedOut = false
+  const timeout = setTimeout(() => {
+    timedOut = true
+    controller.abort()
+  }, CHAT_LIMITS.upstreamTimeoutMs)
 
   try {
     const upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
@@ -85,45 +104,57 @@ export default async function handler(req: ChatRequest, res: ChatResponse) {
         model: OPENROUTER_MODEL,
         temperature: 0.4,
         max_tokens: 300,
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...sanitised],
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          ...validation.messages,
+        ],
       }),
     })
 
     if (!upstream.ok) {
-      let upstreamBody = ''
-      try {
-        upstreamBody = await upstream.text()
-      } catch {
-        upstreamBody = '(could not read body)'
-      }
-
-      let upstreamMessage = upstreamBody
-      try {
-        const parsed = JSON.parse(upstreamBody)
-        upstreamMessage =
-          parsed?.error?.message ?? parsed?.message ?? upstreamBody
-      } catch {
-        /* keep raw text */
-      }
-
       console.error('[chat] OpenRouter error', {
         status: upstream.status,
         statusText: upstream.statusText,
         model: OPENROUTER_MODEL,
-        message: String(upstreamMessage).slice(0, 500),
       })
-
-      return res.status(502).json({ error: 'AI service unavailable' })
+      return serviceUnavailable(res)
     }
 
-    const data = await upstream.json()
-    const reply = data.choices?.[0]?.message?.content ?? ''
+    const data: unknown = await upstream.json()
+    const reply =
+      data &&
+      typeof data === 'object' &&
+      Array.isArray((data as { choices?: unknown }).choices) &&
+      typeof (data as { choices: Array<{ message?: { content?: unknown } }> })
+        .choices[0]?.message?.content === 'string'
+        ? (data as { choices: Array<{ message: { content: string } }> })
+          .choices[0].message.content.trim()
+        : ''
 
-    return res.status(200).json({ reply })
-  } catch (err) {
-    console.error('[chat] handler failed', {
-      message: err instanceof Error ? err.message : String(err),
+    if (!reply) {
+      console.error('[chat] OpenRouter returned an empty reply', {
+        model: OPENROUTER_MODEL,
+      })
+      return serviceUnavailable(res, 502)
+    }
+
+    return res.status(200).json({
+      reply: reply.slice(0, CHAT_LIMITS.maxReplyCharacters),
     })
-    return res.status(500).json({ error: 'Internal server error' })
+  } catch (error) {
+    if (timedOut || (error instanceof Error && error.name === 'AbortError')) {
+      console.error('[chat] OpenRouter request timed out', {
+        model: OPENROUTER_MODEL,
+        timeoutMs: CHAT_LIMITS.upstreamTimeoutMs,
+      })
+      return serviceUnavailable(res, 504)
+    }
+
+    console.error('[chat] handler failed', {
+      message: error instanceof Error ? error.message : String(error),
+    })
+    return serviceUnavailable(res)
+  } finally {
+    clearTimeout(timeout)
   }
 }

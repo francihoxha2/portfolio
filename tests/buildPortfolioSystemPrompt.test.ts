@@ -25,6 +25,7 @@ describe('portfolio system prompt', () => {
       'Public descriptions use Franci Hoxha\'s first-person website voice; treat “I” and “my” in that copy as referring to Franci Hoxha, never the assistant.',
     )
     expect(prompt).toContain('do not pretend to be Franci Hoxha personally')
+    expect(prompt).toContain('never say "I built..." as though the assistant were Franci Hoxha')
     expect(prompt).not.toMatch(/Java\s*\(secondary\)|secondary\s+Java/i)
   })
 

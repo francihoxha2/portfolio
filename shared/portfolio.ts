@@ -571,8 +571,9 @@ const portfolioData = {
   ],
   assistant: {
     suggestedQuestions: [
-      'What has Franci built?',
-      'What is his technical stack?',
+      'What projects has Franci built?',
+      'What technologies does he work with?',
+      'Tell me about Planify.',
       'What is his professional background?',
       'What AI experience does he have?',
     ],
