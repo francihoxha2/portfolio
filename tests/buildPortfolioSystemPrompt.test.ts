@@ -13,6 +13,9 @@ describe('portfolio system prompt', () => {
     expect(prompt).toContain('Planify is my flagship software project.')
     expect(prompt).toContain('Languages: JavaScript, TypeScript, Python, Java')
     expect(prompt).toContain('Complete Software Engineering Course')
+    expect(prompt).toContain('Master’s degree in Business Administration')
+    expect(prompt).toContain('Master of Science in Informatics Engineering')
+    expect(prompt).not.toContain('Business Administration studies')
   })
 
   it('grounds first-person public copy without turning the assistant into Franci', () => {
@@ -34,7 +37,6 @@ describe('portfolio system prompt', () => {
     expect(prompt).not.toMatch(/polar/i)
     expect(prompt).not.toMatch(/online customer payments?/i)
     expect(prompt).not.toMatch(/customer prepayments?/i)
-    expect(prompt).not.toContain('Master of Science in Informatics Engineering')
     expect(prompt).not.toContain('European University of Tirana')
     expect(prompt).not.toContain('Usually replies within a day')
   })

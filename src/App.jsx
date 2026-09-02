@@ -63,8 +63,11 @@ function App() {
         />
         <EngineeringStackSection capabilityGroups={capabilityGroups} />
         <SelectedWorkSection projects={selectedProjects} />
-        <JourneySection journey={journey} />
-        <CredentialsSection credentials={credentials} />
+        <JourneySection journey={journey} narrative={portfolio.journeyNarrative} />
+        <CredentialsSection
+          credentials={credentials}
+          narrative={portfolio.credentialsNarrative}
+        />
         <AiChat suggestions={portfolio.assistant.suggestedQuestions} />
         <ContactSection contacts={contacts} />
       </main>

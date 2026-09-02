@@ -35,6 +35,44 @@ const EXPECTED_LANGUAGE_CAPABILITIES = [
   ['java', 'Java'],
 ] as const
 
+const EXPECTED_JOURNEY_STAGES = [
+  [
+    'business-education',
+    'business',
+    'Business foundation',
+    'Master’s degree in Business Administration',
+  ],
+  ['it-support', 'systems', 'IT / systems foundation', 'Computer Technician & IT Support'],
+  [
+    'masters',
+    'engineering',
+    'Software engineering',
+    'Master of Science in Informatics Engineering',
+  ],
+  ['product-development', 'product', 'Product development', 'Building software as a product'],
+] as const
+
+const EXPECTED_CREDENTIALS = [
+  [
+    'software-engineering-build-better-software',
+    'Complete Software Engineering Course: Build Better Software',
+    '2026-06-23',
+    '/certificates/software-engineering-build-better-software.jpg',
+  ],
+  [
+    'ai-coder-claude-code-coding-agents',
+    'AI Coder: Complete Claude Code & Coding Agents Course',
+    '2026-06-21',
+    '/certificates/ai-coder-claude-code-coding-agents.jpg',
+  ],
+  [
+    'succeed-in-age-of-ai',
+    'Succeed in the Age of AI',
+    '2026-05-18',
+    '/certificates/succeed-in-age-of-ai.jpg',
+  ],
+] as const
+
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(`Invalid portfolio data: ${message}`)
 }
@@ -103,6 +141,27 @@ export function validatePortfolio(data: PortfolioData): PortfolioData {
   const java = languageCapabilities?.items.find((item) => item.id === 'java')
   assert(java?.prominence === 'primary', 'Java must use primary language prominence')
 
+  assert(
+    JSON.stringify(
+      data.journey.map(({ id, stage, stageLabel, title }) => [id, stage, stageLabel, title]),
+    ) === JSON.stringify(EXPECTED_JOURNEY_STAGES),
+    'Journey must preserve the approved business-to-product progression and degree titles',
+  )
+
+  const masters = data.journey.find((entry) => entry.id === 'masters')
+  assert(masters?.period === 'Completed July 2026', 'Master’s completion must remain July 2026')
+  assert(
+    JSON.stringify(
+      data.credentials.map(({ id, title, completedOn, asset }) => [
+        id,
+        title,
+        completedOn,
+        asset.src,
+      ]),
+    ) === JSON.stringify(EXPECTED_CREDENTIALS),
+    'Credentials must match the three approved 2026 records',
+  )
+
   const assetIds = new Set(data.assets.map((asset) => asset.id))
   for (const project of data.projects) {
     if (project.previewAssetId) {
@@ -125,8 +184,13 @@ export function validatePortfolio(data: PortfolioData): PortfolioData {
 
   for (const credential of data.credentials) {
     assert(
-      credential.asset.status === 'planned' && !credential.asset.src,
-      `credential "${credential.id}" must not reference a local image before Phase 7`,
+      credential.asset.status === 'available' && Boolean(credential.asset.src),
+      `credential "${credential.id}" requires its real certificate image`,
+    )
+    assert(!credential.asset.plannedPath, `credential "${credential.id}" cannot remain planned`)
+    assert(
+      credential.asset.width === 1600 && credential.asset.height === 1190,
+      `credential "${credential.id}" requires its inspected image dimensions`,
     )
     assert(
       credential.verificationUrl === undefined,
@@ -146,7 +210,9 @@ export function validatePortfolio(data: PortfolioData): PortfolioData {
         ...group,
         items: group.items.filter((item) => isPublished(item.status)),
       })),
+    journeyNarrative: data.journeyNarrative,
     journey: data.journey.filter((item) => isPublished(item.status)),
+    credentialsNarrative: data.credentialsNarrative,
     credentials: data.credentials.filter((item) => isPublished(item.status)),
     languages: data.languages.filter((item) => isPublished(item.status)),
     availability: data.availability,

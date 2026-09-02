@@ -2,7 +2,7 @@
 
 Franci Hoxha's React portfolio presents selected software work, technical capabilities, professional background, contact paths, a downloadable CV, and an OpenRouter-backed portfolio assistant.
 
-The current application is the pre-redesign portfolio with its Phase 0 content and data baseline applied. The visual redesign and 3D experience are planned but are not implemented. [PORTFOLIO_3D_MASTER_PLAN.md](./PORTFOLIO_3D_MASTER_PLAN.md) is the authoritative redesign plan.
+The current application includes the implemented portfolio experience through Phase 6 and the Phase 7 Journey/Credentials work described in the master plan. [PORTFOLIO_3D_MASTER_PLAN.md](./PORTFOLIO_3D_MASTER_PLAN.md) is the authoritative redesign plan.
 
 ## Current architecture
 
@@ -14,7 +14,7 @@ The current application is the pre-redesign portfolio with its Phase 0 content a
 - `api/chat.js` remains the Vercel serverless OpenRouter endpoint.
 - `public/Franci-Hoxha-CV.pdf` remains the current downloadable CV and is intentionally unchanged.
 
-Credential metadata is modeled for a later phase. Certificate images and the Credentials UI are not present yet.
+Journey and credential metadata drive their public sections from the shared canonical source. The three real Udemy certificate images are stored under `public/certificates/`, marked `available` in canonical data, and exposed through the accessible certificate viewer.
 
 ## Requirements
 
@@ -75,4 +75,4 @@ npm run build
 
 Public professional facts belong in `shared/portfolio.ts`; do not duplicate them in components, metadata, or the API prompt. The model contains no secrets or certificate verification URLs. Unresolved availability remains `null`, and deeper project claims stay omitted until verified.
 
-The current CV still contains historical wording that is intentionally not treated as an authority for the site or AI. Replacing it, adding certificate assets/UI, restructuring the page, and beginning the visual/3D redesign require later explicit authorization.
+The current CV still contains historical wording that is intentionally not treated as an authority for the site or AI. Replacing it remains a separately authorized task. Raw non-Udemy certificate material remains unpublished; placeholder or fabricated credential art must not be used.

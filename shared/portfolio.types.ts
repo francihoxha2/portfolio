@@ -91,14 +91,28 @@ export interface CapabilityGroup {
 
 export interface JourneyEntry {
   id: string
-  kind: 'education' | 'experience'
+  kind: 'education' | 'experience' | 'practice'
+  stage: 'business' | 'systems' | 'engineering' | 'product'
+  stageLabel: string
   period?: string
   title: string
   organization?: string
   location?: string
   description?: string
+  bridge?: string
   status: PublicationStatus
   verificationStatus: VerificationStatus
+}
+
+export interface JourneyNarrative {
+  title: string
+  introduction: string
+}
+
+export interface CredentialsNarrative {
+  title: string
+  introduction: string
+  handoff: string
 }
 
 export interface Credential {
@@ -139,7 +153,9 @@ export interface PortfolioData {
   contact: ContactChannel[]
   projects: PortfolioProject[]
   capabilityGroups: CapabilityGroup[]
+  journeyNarrative: JourneyNarrative
   journey: JourneyEntry[]
+  credentialsNarrative: CredentialsNarrative
   credentials: Credential[]
   languages: Language[]
   availability: Availability | null

@@ -431,33 +431,71 @@ const portfolioData = {
       ]),
     },
   ],
+  journeyNarrative: {
+    title: 'How my foundations became product thinking',
+    introduction:
+      'My background started with business and hands-on systems work before moving deeper into software engineering. That combination shapes how I build today: as products used by people and organizations, not code in isolation.',
+  },
   journey: [
     {
       id: 'business-education',
       kind: 'education',
-      title: 'Business Administration studies',
-      description: 'My business education forms part of my path into software development.',
+      stage: 'business',
+      stageLabel: 'Business foundation',
+      title: 'Master’s degree in Business Administration',
+      description:
+        'Completing my Master’s degree in Business Administration gave me a strong understanding of organizations, operations, customers, and the processes that connect them.',
+      bridge:
+        'That business foundation gave me a practical starting point for understanding how systems support people and organizations.',
       status: 'published',
       verificationStatus: 'confirmed',
     },
     {
       id: 'it-support',
       kind: 'experience',
+      stage: 'systems',
+      stageLabel: 'IT / systems foundation',
       title: 'Computer Technician & IT Support',
       description:
-        'I supported users and systems across Windows, macOS, and Linux while developing practical troubleshooting, reliability, documentation, and operational skills.',
+        'I supported users and systems across Windows, macOS, and Linux, developing hands-on experience in hardware and software troubleshooting, maintenance, backup and recovery, and end-user support.',
+      bridge:
+        'Working close to real systems made reliability, clear diagnosis, and user needs part of how I approach technical problems.',
       status: 'published',
       verificationStatus: 'confirmed',
     },
     {
       id: 'masters',
       kind: 'education',
+      stage: 'engineering',
+      stageLabel: 'Software engineering',
       period: 'Completed July 2026',
-      title: 'Master’s degree',
+      title: 'Master of Science in Informatics Engineering',
+      description:
+        'I moved deeper into software engineering through formal study and completed my Master of Science in Informatics Engineering in July 2026.',
+      bridge:
+        'Software engineering gave me the methods to turn business context and systems thinking into working applications.',
+      status: 'published',
+      verificationStatus: 'confirmed',
+    },
+    {
+      id: 'product-development',
+      kind: 'practice',
+      stage: 'product',
+      stageLabel: 'Product development',
+      title: 'Building software as a product',
+      description:
+        'Today, I apply those foundations to product development across interfaces, APIs, data, testing, and delivery—including the software work presented in this portfolio.',
       status: 'published',
       verificationStatus: 'confirmed',
     },
   ],
+  credentialsNarrative: {
+    title: 'Selected learning that supports the path',
+    introduction:
+      'These three 2026 credentials extend my software-engineering foundation and the way I apply AI in development. They support the work; they do not replace it.',
+    handoff:
+      'The portfolio assistant below is one practical example of how I apply AI integration in a software experience.',
+  },
   credentials: [
     {
       id: 'software-engineering-build-better-software',
@@ -468,8 +506,11 @@ const portfolioData = {
       durationHours: 15,
       asset: {
         id: 'credential-software-engineering',
-        status: 'planned',
-        plannedPath: 'public/certificates/software-engineering-build-better-software.jpg',
+        status: 'available',
+        src: '/certificates/software-engineering-build-better-software.jpg',
+        alt: 'Udemy certificate for Complete Software Engineering Course: Build Better Software',
+        width: 1600,
+        height: 1190,
       },
       status: 'published',
       verificationStatus: 'confirmed',
@@ -483,8 +524,11 @@ const portfolioData = {
       durationHours: 16.5,
       asset: {
         id: 'credential-ai-coder',
-        status: 'planned',
-        plannedPath: 'public/certificates/ai-coder-claude-code-coding-agents.jpg',
+        status: 'available',
+        src: '/certificates/ai-coder-claude-code-coding-agents.jpg',
+        alt: 'Udemy certificate for AI Coder: Complete Claude Code & Coding Agents Course',
+        width: 1600,
+        height: 1190,
       },
       status: 'published',
       verificationStatus: 'confirmed',
@@ -498,8 +542,11 @@ const portfolioData = {
       durationHours: 8.5,
       asset: {
         id: 'credential-age-of-ai',
-        status: 'planned',
-        plannedPath: 'public/certificates/succeed-in-age-of-ai.jpg',
+        status: 'available',
+        src: '/certificates/succeed-in-age-of-ai.jpg',
+        alt: 'Udemy certificate for Succeed in the Age of AI',
+        width: 1600,
+        height: 1190,
       },
       status: 'published',
       verificationStatus: 'confirmed',

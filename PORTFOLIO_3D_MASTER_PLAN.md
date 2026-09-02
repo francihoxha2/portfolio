@@ -368,8 +368,7 @@ Every professional claim in the canonical data model must have an editorial stat
 | Main title and exact hero statement/capability line | **CONFIRMED** | Use the approved copy above. |
 | Planify, BarberSpot.al, charging-station project inventory | **CONFIRMED** | Preserve all three. Validate details. |
 | Three 2026 Udemy certificates, metadata, and externally supplied images | **CONFIRMED** | Add under Credentials; repository placement of the approved images occurs in Phase 7. |
-| Master's degree completion | **CONFIRMED** | Completed July 2026. Present it as a completed journey milestone. |
-| Exact official English Master's diploma/program wording | **NEEDS USER CONFIRMATION** | Completion and date are settled; only the exact official English wording remains unresolved. |
+| Master of Science in Informatics Engineering | **CONFIRMED** | Completed July 2026. Present it as a completed journey milestone using this exact title. |
 | "Currently pursuing an MSc/Master's" / `2024 - Present` | **STALE** | Remove from visible copy, shared data, SEO, AI context, and any later structured data. |
 | Junior-led hero/title/SEO/AI positioning | **STALE / REWRITE** | Main brand is Full-Stack Software Developer; career level must not define the main identity. |
 | "SaaS & booking" as main identity | **STALE / REWRITE** | Move booking/product evidence into work sections. |
@@ -381,7 +380,7 @@ Every professional claim in the canonical data model must have an editorial stat
 | Availability for roles, internships, remote work | **NEEDS USER CONFIRMATION** | One centralized optional field; hide when unset. |
 | Current "Usually replies within a day" copy | **STALE / REMOVE** | Replace with a neutral invitation; any future response-time claim would require fresh confirmation at publication time. |
 | Tirana, email, phone, LinkedIn | **NEEDS USER CONFIRMATION** | Repository-consistent, but verify freshness and desired public visibility. |
-| Business Administration degree details | **NEEDS USER CONFIRMATION** | Keep the broad journey; verify exact institution, wording, location, and dates. |
+| Master's degree in Business Administration | **CONFIRMED** | Present the completed degree using this exact title; institution wording, location, and dates remain unpublished pending separate confirmation. |
 | IT troubleshooting/systems background across Windows, macOS, Linux, hardware/software support, backup/recovery, and end-user support | **CONFIRMED** | Use as evidence of systems thinking; exact employer/organization and final public dates remain phase-specific verification items. |
 | JavaScript, TypeScript, React, Next.js, HTML, CSS, responsive UI, integration, and PWA-related work | **CONFIRMED** | Present with evidence-led, non-expert wording. |
 | Node.js-style APIs, REST, Python, FastAPI, auth, authorization, and application/business logic | **CONFIRMED** | Prioritize project evidence and avoid expert-level claims. |
@@ -727,11 +726,11 @@ This is a strength: business education helps frame workflows; IT support contrib
 - Do not invent an employer from the current generic `Technical Support and Systems Operations` label.
 - Do not claim seniority or professional software employment that is not present.
 - Present the Master's as a completed milestone: degree completed in July 2026. Never describe it as current or ongoing.
-- Use the exact official English diploma/program title only after that wording is confirmed; this wording question does not reopen the confirmed completion status/date.
+- Use the confirmed `Master of Science in Informatics Engineering` title; this wording does not reopen the confirmed completion status/date.
 
 ### 13.3 Data needed
 
-Degree completion and the July 2026 completion date are **CONFIRMED**. The exact official English Master's diploma/program wording remains **NEEDS USER CONFIRMATION**. IT employer/self-employed context and final public dates, Business Administration institution/award wording, and availability-specific professional status remain targeted verification items for the phases that publish them.
+The `Master of Science in Informatics Engineering` title and July 2026 completion date are **CONFIRMED**. The `Master's degree in Business Administration` title is also **CONFIRMED**. IT employer/self-employed context and final public dates, Business Administration institution/location/date wording, and availability-specific professional status remain targeted verification items for the phases that publish them.
 
 ## 14. Credentials and Certifications
 
@@ -1430,6 +1429,17 @@ Each phase is independently reviewable. Do not begin high-cost 3D polish before 
 | Performance | Lazy thumbnails/full images; decode only opened certificate where practical. |
 | Risks | Raw certificate aspect/quality and personal data visible in images; review/crop only with authorization. |
 
+#### Phase 7 implementation record - 2026-09-01
+
+- Journey uses one semantic four-stage progression in canonical order: Business foundation → IT / systems foundation → Software engineering → Product development.
+- Public narrative copy lives in `shared/portfolio.ts` and remains first-person. Stage 01 uses the confirmed `Master’s degree in Business Administration` title without publishing unresolved institution/date details; the IT stage names no employer or dates; Stage 03 uses the canonical `Master of Science in Informatics Engineering` / `Completed July 2026` wording; product development is presented as current practice rather than fabricated employment.
+- Desktop progression uses `IntersectionObserver` to activate the stage nearest the reading zone and advances one decorative CSS path. It adds no canvas, animation package, pinned scroll region, scroll hijacking, or permanent animation loop.
+- Mobile uses normal vertical reading with a simple continuous route rather than compressed desktop geometry. Reduced motion renders the full hierarchy without reveal movement.
+- Credentials render exactly the three canonical 2026 Udemy records with provider, instructors, completion date, and duration. Older generic courses, language proficiency claims, and verification links remain omitted.
+- The certificate viewer is implemented as an accessible modal dialog for credentials whose canonical asset status is `available`: explicit button, initial close-button focus, focus containment and return, Escape/close handling, inert background, mobile viewport fit, uncropped scrollable image, original-image link, and metadata-preserving load failure behavior.
+- The three genuine Udemy source images are present at the semantic paths in Section 14.4. Each is a 1600×1190 JPEG, is marked `available` in canonical data, and enables its real preview and viewer trigger. Visible certificate IDs and `ude.my` URLs remain inside the inspectable source images only; no separate verification CTA is published because verification URLs are not canonical public metadata.
+- Raw ATC certificate material remains unpublished because it contains personal information. It does not add public credential metadata or supply canonical Journey facts.
+
 ### Phase 8 - AI Assistant redesign and endpoint hardening
 
 | Field | Plan |
@@ -1599,7 +1609,7 @@ Phase 0 may begin after this plan reconciliation. The questions below are gates 
 
 These are **NEEDS USER CONFIRMATION** before the affected canonical public content/foundation can be finalized. They do not reopen any confirmed decision and need not prevent unrelated Phase 0 architecture work from starting.
 
-1. What is the exact official English Master's diploma/program wording and official institution wording? Completion in July 2026 is already confirmed.
+1. What official institution wording may accompany the confirmed `Master of Science in Informatics Engineering` title? Completion in July 2026 is already confirmed.
 2. Which current contact fields are approved for public display: email, LinkedIn, Tirana/location, and phone? Phone visibility is specifically unresolved. Availability/role-preference copy should remain null/hidden until separately confirmed.
 3. What is Planify's approved current public status, Franci's role/contribution wording, and concise public description?
 4. Which Planify capabilities may be stated in the Phase 0 public baseline? Evaluate booking, customer/business/staff workflows, multi-role/RBAC, authentication/authorization, notifications, localization, APIs, MongoDB, responsive/PWA/mobile work, testing, debugging, deployment, and production hardening against current evidence. Online customer payments/prepayments and Polar are excluded as stale, not questioned.
@@ -1632,7 +1642,7 @@ If evidence is unavailable, Phase 5 must use honest system/case-study visuals an
 These are targeted **NEEDS USER CONFIRMATION** items for final Journey/Credentials copy; they do not block Phase 0:
 
 1. What was the exact employer/organization or work arrangement for the IT role, and which final dates/responsibility details may be published?
-2. Confirm the exact Business Administration award title, institution wording, city spelling, and dates.
+2. Confirm the Business Administration institution wording, city spelling, and dates; the award title `Master's degree in Business Administration` is confirmed.
 3. Confirm English/Italian proficiency wording and whether Albanian should be listed.
 4. Confirm provider/details for the two older generic courses or omit/de-emphasize them behind the stronger 2026 Credentials.
 5. Are there exact public verification URLs for the three supplied certificates? URLs are optional; the certificates, metadata, and externally supplied images are already confirmed.
@@ -1673,7 +1683,7 @@ These are **NON-BLOCKING FOR PHASE 0** and should be decided only before the fea
 
 ### 31.2 Confirmed replacements
 
-- Master's degree **completed July 2026**. Only the exact official English diploma/program wording remains **NEEDS USER CONFIRMATION**.
+- `Master of Science in Informatics Engineering` **completed July 2026**.
 - Public identity: **Franci Hoxha - Full-Stack Software Developer**.
 - Main statement: **Building modern software experiences, from idea to production.**
 - Capability line: **Web • Mobile • Backend • AI**.
@@ -1710,7 +1720,7 @@ These are **NON-BLOCKING FOR PHASE 0** and should be decided only before the fea
 
 ### 31.5 Still requiring targeted verification
 
-- Exact official English Master's diploma/program and institution wording; completion/date are not unresolved.
+- Official institution wording for the confirmed `Master of Science in Informatics Engineering`; the title and completion date are not unresolved.
 - Final public contact visibility, phone visibility, and any time-sensitive availability wording.
 - Planify's current status, Franci's role/contribution wording, approved public feature subset, non-payment integrations, terminology, and publishable screenshots.
 - Exact mobile technology names and evidence snippets/relative prominence for the confirmed capability inventory.
@@ -1727,7 +1737,7 @@ These are **NON-BLOCKING FOR PHASE 0** and should be decided only before the fea
 - CV's `Polar for payments` wording is stale and must be removed from all future public Portfolio3D data/copy. It is not eligible for reconciliation as a current claim.
 - CV says "scalable applications" and "passionate"; these conflict with the new evidence-led tone unless specifically supported/rephrased.
 - CV uses Tirane/Tiranë/Korçë variants while app uses Tirana/Korce; exact public spelling should be standardized after confirmation.
-- App calls the Business Administration qualification `Master's Degree`; CV uses `Master's degree, Business Administration`; exact official award wording is **NEEDS USER CONFIRMATION**.
+- The confirmed public award title is `Master's degree in Business Administration`; institution wording, city spelling, and dates remain unpublished pending separate confirmation.
 
 The current CV remains downloadable and unchanged, but it is not the final authority for shared data, visible copy, AI context, SEO, structured data, or architecture diagrams. Replacing/updating it requires a separate authorized task.
 

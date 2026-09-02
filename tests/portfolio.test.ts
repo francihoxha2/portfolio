@@ -14,11 +14,30 @@ describe('canonical portfolio data', () => {
       capabilityLine: 'Web • Mobile • Backend • AI',
     })
     expect(portfolio.availability).toBeNull()
-    expect(portfolio.journey.find((entry) => entry.id === 'masters')).toMatchObject({
-      period: 'Completed July 2026',
-      title: 'Master’s degree',
+    expect(portfolio.journey.find((entry) => entry.id === 'business-education')).toMatchObject({
+      title: 'Master’s degree in Business Administration',
+      description:
+        'Completing my Master’s degree in Business Administration gave me a strong understanding of organizations, operations, customers, and the processes that connect them.',
+      bridge:
+        'That business foundation gave me a practical starting point for understanding how systems support people and organizations.',
       verificationStatus: 'confirmed',
     })
+    expect(portfolio.journey.find((entry) => entry.id === 'masters')).toMatchObject({
+      period: 'Completed July 2026',
+      title: 'Master of Science in Informatics Engineering',
+      description:
+        'I moved deeper into software engineering through formal study and completed my Master of Science in Informatics Engineering in July 2026.',
+      verificationStatus: 'confirmed',
+    })
+    expect(portfolio.journey.map((entry) => entry.stage)).toEqual([
+      'business',
+      'systems',
+      'engineering',
+      'product',
+    ])
+    expect(JSON.stringify(portfolio.journey)).not.toMatch(
+      /Business Administration studies|currently studying|2024\s*[-–]\s*present/i,
+    )
   })
 
   it('keeps the existing CV path canonical and resolvable', () => {
@@ -30,14 +49,71 @@ describe('canonical portfolio data', () => {
     expect(existsSync(join(process.cwd(), 'public', cv?.src?.slice(1) ?? ''))).toBe(true)
   })
 
-  it('models the three credentials without local images or fabricated URLs', () => {
+  it('models exactly the three approved credentials without fabricated URLs', () => {
     expect(portfolio.credentials).toHaveLength(3)
+    expect(
+      portfolio.credentials.map(({ title, provider, instructors, completedOn }) => ({
+        title,
+        provider,
+        instructors,
+        completedOn,
+      })),
+    ).toEqual([
+      {
+        title: 'Complete Software Engineering Course: Build Better Software',
+        provider: 'Udemy',
+        instructors: ['Yogesh Dahake'],
+        completedOn: '2026-06-23',
+      },
+      {
+        title: 'AI Coder: Complete Claude Code & Coding Agents Course',
+        provider: 'Udemy',
+        instructors: ['Ligency', 'Ed Donner'],
+        completedOn: '2026-06-21',
+      },
+      {
+        title: 'Succeed in the Age of AI',
+        provider: 'Udemy',
+        instructors: ['Dr. Angela Yu'],
+        completedOn: '2026-05-18',
+      },
+    ])
+
     for (const credential of portfolio.credentials) {
       expect(credential.verificationUrl).toBeUndefined()
-      expect(credential.asset.status).toBe('planned')
-      expect(credential.asset.src).toBeUndefined()
-      expect(credential.asset.plannedPath).toMatch(/^public\/certificates\//)
+      expect(credential.asset).toMatchObject({
+        status: 'available',
+        width: 1600,
+        height: 1190,
+      })
+      expect(credential.asset.src).toMatch(/^\/certificates\/.+\.jpg$/)
+      expect(
+        existsSync(join(process.cwd(), 'public', credential.asset.src?.slice(1) ?? '')),
+      ).toBe(true)
     }
+  })
+
+  it('keeps all Journey narrative copy first-person and free of audit language', () => {
+    const publicCopy = [
+      portfolio.journeyNarrative.title,
+      portfolio.journeyNarrative.introduction,
+      ...portfolio.journey.flatMap((entry) => [
+        entry.stageLabel,
+        entry.title,
+        entry.period,
+        entry.description,
+        entry.bridge,
+      ]),
+      portfolio.credentialsNarrative.title,
+      portfolio.credentialsNarrative.introduction,
+      portfolio.credentialsNarrative.handoff,
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    expect(publicCopy).toMatch(/\bI\b|\bmy\b/)
+    expect(publicCopy).not.toMatch(/\bFranci\b/)
+    expect(publicCopy).not.toMatch(/confirmed|verified|evidence|approved|validation|claim/i)
   })
 
   it('uses the seven approved capability groups and exact language set', () => {

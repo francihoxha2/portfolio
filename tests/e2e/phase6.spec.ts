@@ -123,6 +123,13 @@ test('fine-pointer interaction propagates React and FastAPI states deterministic
   const system = await openSystem(page)
   const desktop = system.locator('[data-testid="engineering-desktop-map"]')
 
+  await expect.poll(() => system.evaluate((element) =>
+    element
+      .getAnimations({ subtree: true })
+      .filter((animation) => animation.playState === 'running')
+      .length,
+  )).toBe(0)
+
   await desktop.getByRole('button', { name: 'React' }).hover()
   await expect(system).toHaveAttribute('data-active-capability', 'react')
   await expect(system).toHaveAttribute('data-active-cluster', 'frontend')

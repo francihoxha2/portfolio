@@ -87,6 +87,7 @@ export function buildPortfolioSystemPrompt() {
     ...projectLines,
     '',
     '== CONFIRMED JOURNEY ==',
+    portfolio.journeyNarrative.introduction,
     ...journeyLines,
     '',
     '== CONFIRMED CREDENTIALS ==',
