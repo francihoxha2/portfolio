@@ -18,6 +18,17 @@ export interface PortfolioIdentity {
 export interface PortfolioMetadata {
   title: string
   description: string
+  siteName: string
+  socialImagePath: `/${string}`
+  socialImageAlt: string
+  socialImageWidth: number
+  socialImageHeight: number
+  /**
+   * Stays null until an approved canonical portfolio domain exists.
+   * Canonical, og:url, and any absolute-URL structured data remain omitted
+   * while this is null rather than guessing a deployment host.
+   */
+  canonicalUrl: string | null
 }
 
 export interface NavigationItem {
@@ -109,6 +120,14 @@ export interface JourneyNarrative {
   introduction: string
 }
 
+export interface ContactNarrative {
+  eyebrow: string
+  title: string
+  introduction: string
+  emailCtaLabel: string
+  cvCtaLabel: string
+}
+
 export interface CredentialsNarrative {
   title: string
   introduction: string
@@ -157,6 +176,7 @@ export interface PortfolioData {
   journey: JourneyEntry[]
   credentialsNarrative: CredentialsNarrative
   credentials: Credential[]
+  contactNarrative: ContactNarrative
   languages: Language[]
   availability: Availability | null
   assets: PublicAsset[]

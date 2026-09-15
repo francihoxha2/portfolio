@@ -1,5 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="18" fill="#152528"></rect>
-  <rect x="3" y="3" width="58" height="58" rx="16" fill="none" stroke="#f1a464" stroke-width="4"></rect>
-  <text x="32" y="39" fill="#f3ede3" font-family="Georgia, &#39;Palatino Linotype&#39;, serif" font-size="24" font-weight="700" text-anchor="middle">FH</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="FH monogram">
+  <defs>
+    <linearGradient id="fh-edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8270ff"></stop>
+      <stop offset="1" stop-color="#5ddde6"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#0d1019"></rect>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="14" fill="none" stroke="url(#fh-edge)" stroke-width="4"></rect>
+  <text x="32" y="43" fill="#f3f5fa" font-family="'Space Grotesk', 'Segoe UI', system-ui, sans-serif" font-size="30" font-weight="700" letter-spacing="-1.4" text-anchor="middle">FH</text>
 </svg>

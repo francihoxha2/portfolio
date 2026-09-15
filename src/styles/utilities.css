@@ -472,9 +472,50 @@
   line-height: 1.65;
 }
 
+/* Phase 9: the closing section steps down in intensity after the assistant.
+   One quiet seam marks the transition; no new signature interaction. */
+.contact-section {
+  position: relative;
+}
+
+.contact-section::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  content: '';
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(130, 112, 255, 0.4) 24%,
+    rgba(93, 221, 230, 0.32) 64%,
+    transparent
+  );
+}
+
+.contact-panel {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Explicit values: the deferred legacy AI-era stylesheet still ships a
+   `.contact-list` card that would otherwise bleed into this flat list. */
 .contact-list {
   display: grid;
+  gap: 0;
+  padding: 0;
+  border: 0;
   border-top: 1px solid var(--color-border-strong);
+  border-radius: 0;
+  background: none;
 }
 
 .contact-item {
@@ -513,13 +554,34 @@
   align-items: center;
   gap: var(--space-4);
   min-height: 8rem;
+  /* Keeps the closing line clear of the fixed assistant launcher. */
+  padding-bottom: calc(3.6rem + env(safe-area-inset-bottom, 0px));
 }
 
 .site-footer__brand {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
   border-radius: 0.3rem;
   color: var(--color-text);
   font-family: var(--font-display);
   font-weight: 650;
+}
+
+.site-footer__brand-arrow {
+  color: var(--color-accent-cyan);
+  font-size: 0.9em;
+}
+
+.site-footer__meta {
+  display: grid;
+  gap: 0.2rem;
+  justify-items: end;
+}
+
+.site-footer__copyright {
+  color: var(--color-text-subtle);
 }
 
 .site-footer nav {
@@ -530,7 +592,8 @@
 }
 
 .site-footer nav a,
-.site-footer p {
+.site-footer p,
+.site-footer__meta span {
   color: var(--color-text-muted);
   font-size: 0.83rem;
 }
@@ -625,8 +688,17 @@
   .site-footer__inner {
     grid-template-columns: 1fr;
     gap: var(--space-2);
-    padding-block: var(--space-4);
+    padding-top: var(--space-4);
+    padding-bottom: calc(var(--space-4) + 3.6rem + env(safe-area-inset-bottom, 0px));
     text-align: center;
+  }
+
+  .site-footer__brand {
+    justify-content: center;
+  }
+
+  .site-footer__meta {
+    justify-items: center;
   }
 
   .site-footer nav {
@@ -650,6 +722,14 @@
 
   .hero-section__actions .text-link {
     justify-content: center;
+  }
+
+  .contact-actions {
+    align-items: stretch;
+  }
+
+  .contact-actions .button {
+    width: 100%;
   }
 
   .contact-item {

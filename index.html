@@ -2,17 +2,107 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon-fh.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>__PORTFOLIO_TITLE__</title>
     <meta
       name="description"
       content="__PORTFOLIO_DESCRIPTION__"
     />
+    <meta name="author" content="__PORTFOLIO_SITE_NAME__" />
     <meta name="theme-color" content="#050508" />
-    <title>__PORTFOLIO_TITLE__</title>
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon-fh.svg" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!--
+      Every URL-dependent field stays out until an approved canonical portfolio
+      domain exists: no <link rel="canonical">, no og:url, no og:image or its
+      structured image fields, no twitter:image, and no URL-dependent JSON-LD.
+      A deployment host must not stand in for the canonical address, and a
+      root-relative social image is not a reliable substitute for the absolute
+      URL these fields require. The prepared 1200x630 card lives in public/ and
+      is referenced only once that domain is approved, which is also when
+      twitter:card can claim a large-image card.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="__PORTFOLIO_SITE_NAME__" />
+    <meta property="og:title" content="__PORTFOLIO_TITLE__" />
+    <meta property="og:description" content="__PORTFOLIO_DESCRIPTION__" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="__PORTFOLIO_TITLE__" />
+    <meta name="twitter:description" content="__PORTFOLIO_DESCRIPTION__" />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <style>
+        /* The app root stays empty without JavaScript; the stylesheet still
+           reserves a viewport for it, which would push this content below the
+           fold. */
+        #root {
+          display: none;
+        }
+        body {
+          margin: 0;
+          background: #050508;
+        }
+        .no-js-fallback {
+          max-width: 46rem;
+          margin: 0 auto;
+          padding: 3rem 1.25rem 4rem;
+          color: #f3f5fa;
+          font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+          line-height: 1.6;
+        }
+        .no-js-fallback h1 {
+          margin: 0 0 0.35rem;
+          font-size: clamp(1.75rem, 5vw, 2.5rem);
+          line-height: 1.15;
+        }
+        .no-js-fallback p {
+          margin: 0 0 0.85rem;
+          color: #a4acc0;
+        }
+        .no-js-fallback h2 {
+          margin: 2.25rem 0 0.75rem;
+          font-size: 1.35rem;
+          line-height: 1.25;
+        }
+        .no-js-fallback__eyebrow {
+          margin: 0 0 1.5rem;
+          color: #b5adff;
+          font-size: 0.78rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+        .no-js-fallback ul {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+        .no-js-fallback li {
+          padding: 0.85rem 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .no-js-fallback a {
+          display: inline-block;
+          min-height: 2.75rem;
+          padding: 0.6rem 0;
+          color: #f3f5fa;
+          text-decoration: underline;
+          text-underline-offset: 0.25em;
+          overflow-wrap: anywhere;
+        }
+        .no-js-fallback__note {
+          margin-top: 2rem;
+          font-size: 0.9rem;
+        }
+      </style>
+      __PORTFOLIO_NOSCRIPT__
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

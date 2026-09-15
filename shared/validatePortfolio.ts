@@ -103,6 +103,21 @@ export function validatePortfolio(data: PortfolioData): PortfolioData {
     'approved capability line changed',
   )
   assert(data.availability === null, 'availability must remain null until confirmed')
+  assert(
+    data.metadata.description.length <= 165,
+    'the meta description must stay within a usable search-snippet length',
+  )
+
+  // Status-driven, not channel-driven: any channel still awaiting confirmation
+  // stays unpublished, and confirming one is all it takes to publish it.
+  for (const channel of data.contact) {
+    if (channel.public && isPublished(channel.status)) {
+      assert(
+        channel.verificationStatus !== 'needs-confirmation',
+        `contact channel "${channel.id}" cannot be published while unconfirmed`,
+      )
+    }
+  }
 
   assertUniqueIds(data.navigation, 'navigation')
   assertUniqueIds(data.contact, 'contact')
@@ -214,6 +229,7 @@ export function validatePortfolio(data: PortfolioData): PortfolioData {
     journey: data.journey.filter((item) => isPublished(item.status)),
     credentialsNarrative: data.credentialsNarrative,
     credentials: data.credentials.filter((item) => isPublished(item.status)),
+    contactNarrative: data.contactNarrative,
     languages: data.languages.filter((item) => isPublished(item.status)),
     availability: data.availability,
     assistant: data.assistant,

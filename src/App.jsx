@@ -71,7 +71,11 @@ function App() {
             narrative={portfolio.credentialsNarrative}
           />
           <AiChat suggestions={portfolio.assistant.suggestedQuestions} />
-          <ContactSection contacts={contacts} />
+          <ContactSection
+            contacts={contacts}
+            narrative={portfolio.contactNarrative}
+            cvPath={cvPath}
+          />
         </main>
 
         <SiteFooter identity={portfolio.identity} sections={navigation} />

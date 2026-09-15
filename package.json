@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "node scripts/run-playwright.mjs",
-    "test:dev-lifecycle": "node scripts/check-phase3-dev-lifecycle.mjs"
+    "test:dev-lifecycle": "node scripts/check-phase3-dev-lifecycle.mjs",
+    "generate:social": "node scripts/generate-social-assets.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
