@@ -1776,6 +1776,14 @@ p {
   border-color: var(--primary-glow);
 }
 
+/* Phase 10: the rule above removed the global focus ring from the assistant
+   composer, leaving only a translucent border as the focus affordance. Keyboard
+   focus gets the same indicator every other control on the page uses. */
+.chat-input:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .chat-input::placeholder {
   color: var(--text-mute);
 }

@@ -289,7 +289,7 @@
 
 .planify-browser__bar strong,
 .planify-browser figcaption {
-  color: var(--color-text-subtle);
+  color: var(--color-text-subtle-raised);
   font-family: var(--font-system);
   font-size: 0.68rem;
   font-weight: 560;

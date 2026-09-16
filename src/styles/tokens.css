@@ -7,6 +7,10 @@
   --color-text: #f3f5fa;
   --color-text-muted: #a4acc0;
   --color-text-subtle: #717a90;
+  /* Phase 10: --color-text-subtle clears AA on the page background but lands at
+     4.40:1 on raised panel surfaces such as the Planify browser caption bar.
+     This is the same role, lifted just far enough to pass at small sizes. */
+  --color-text-subtle-raised: #7b8499;
   --color-border: rgba(255, 255, 255, 0.1);
   --color-border-strong: rgba(255, 255, 255, 0.18);
   --color-accent-violet: #8270ff;

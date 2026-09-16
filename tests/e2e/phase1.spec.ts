@@ -151,16 +151,31 @@ for (const viewport of viewports) {
   })
 }
 
-test('remains usable at a 200% page zoom approximation', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 })
-  await page.goto('/')
-  await page.evaluate(() => {
-    document.documentElement.style.zoom = '2'
+/**
+ * Phase 10 methodology correction. This previously set
+ * `document.documentElement.style.zoom = '2'`, which scales layout boxes but
+ * leaves media queries evaluating against the unzoomed viewport. At 1280x800
+ * that kept the desktop header rendered inside a half-width layout and reported
+ * a document overflow to 1421 px from `nav.site-nav` and its Download CV link -
+ * an artifact of the technique, not a product defect. Real browser zoom halves
+ * the CSS viewport and re-evaluates media queries, which is what this does.
+ */
+test('remains usable at 200% browser zoom', async ({ browser }) => {
+  const context = await browser.newContext({
+    viewport: { width: 720, height: 450 },
+    deviceScaleFactor: 2,
   })
+  const page = await context.newPage()
+  await page.goto('/')
 
   await expect(page.locator('h1')).toBeVisible()
   await expect(page.getByRole('link', { name: 'Explore My Work' })).toBeVisible()
   await expectNoHorizontalOverflow(page)
+
+  await page.locator('#work').scrollIntoViewIfNeeded()
+  await expectNoHorizontalOverflow(page)
+
+  await context.close()
 })
 
 test('core text tokens meet WCAG AA contrast', async ({ page }) => {
