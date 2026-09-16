@@ -24,5 +24,25 @@ export default defineConfig({
       name: 'chrome',
       use: { browserName: 'chromium', channel: 'chrome' },
     },
+    // Phase 11: only the cross-browser matrix spec runs in the other engines.
+    // The accepted Phase 0-10 specs stay Chrome-only on purpose - several of
+    // them assert Chromium-specific diagnostics (forced colors, renderer
+    // budgets, CDP throttling) that a second engine would fail for tooling
+    // reasons rather than product defects.
+    {
+      name: 'firefox',
+      use: { browserName: 'firefox' },
+      testMatch: /phase11-(cross-browser|evidence)\.spec\.ts/,
+    },
+    {
+      name: 'webkit',
+      use: { browserName: 'webkit' },
+      testMatch: /phase11-(cross-browser|evidence)\.spec\.ts/,
+    },
+    {
+      name: 'edge',
+      use: { browserName: 'chromium', channel: 'msedge' },
+      testMatch: /phase11-(cross-browser|evidence)\.spec\.ts/,
+    },
   ],
 })

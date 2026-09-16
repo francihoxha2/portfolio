@@ -14,7 +14,8 @@
     "test:e2e": "node scripts/run-playwright.mjs",
     "test:dev-lifecycle": "node scripts/check-phase3-dev-lifecycle.mjs",
     "generate:social": "node scripts/generate-social-assets.mjs",
-    "evidence:phase10": "node scripts/capture-phase10-evidence.mjs"
+    "evidence:phase10": "node scripts/capture-phase10-evidence.mjs",
+    "evidence:phase11": "node scripts/capture-phase11-evidence.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
