@@ -78,6 +78,25 @@
   opacity: calc(1 - var(--planify-source-release));
 }
 
+/**
+ * Simplified mode has no cinematic handoff to receive the released Hero visual:
+ * `.planify-handoff-frame` stays hidden outside `cinematic`, and the Planify
+ * reveal rules are cinematic-only too. Releasing the source all the way to zero
+ * therefore empties the scene slot while it is still on screen and before
+ * Planify scrolls in, which reads as a blank band on a phone. The floor mirrors
+ * the softening the Hero copy and environment already get on narrow viewports,
+ * so the visual hands over by dimming rather than by vanishing. Cinematic is
+ * untouched and still releases fully into the flying frame.
+ */
+.hero-planify-story[data-transition-enhanced='true'][data-transition-mode='simplified']
+  .hero-scene-slot--ready
+  .hero-scene-layer,
+.hero-planify-story[data-transition-enhanced='true'][data-transition-mode='simplified']
+  .hero-scene-slot:not(.hero-scene-slot--ready)
+  .hero-fallback {
+  opacity: calc(1 - var(--planify-source-release) * 0.36);
+}
+
 .planify-handoff-frame {
   position: fixed;
   z-index: 32;

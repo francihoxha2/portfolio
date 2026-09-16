@@ -270,6 +270,178 @@ test('keeps the layout usable across pointer device widths', async ({ browser })
   await runLayoutMatrix(browser, deviceMatrix.filter((device) => !device.touch), false)
 })
 
+/**
+ * Phase 11 corrective gate: mid-transition Hero continuity in simplified mode.
+ *
+ * A real iPhone Safari pass found the Hero visual vanishing part-way through
+ * the Hero-to-Planify scroll, leaving a blank band before Planify entered.
+ * Cause: the `--planify-source-release` rules released the source all the way
+ * to zero in every enhanced mode, but the handoff frame and the Planify reveal
+ * that receive it are cinematic-only, so simplified had nothing to hand over
+ * to. The gate asserts the user outcome rather than a specific opacity: while
+ * the scene slot is still on screen and Planify has not yet arrived, whichever
+ * visual is active - the live scene layer, or the static fallback - must stay
+ * perceptible.
+ */
+const continuityWidths = [320, 375, 390, 430]
+
+// Deliberately well below the 0.64 the fix produces. The gate fails hard on a
+// blank band without pinning the design to an exact value.
+const heroVisualFloor = 0.25
+
+async function heroContinuityViolations(page: Page, label: string) {
+  const viewport = page.viewportSize()
+  if (!viewport) throw new Error('A viewport is required for the continuity walk.')
+
+  const violations: string[] = []
+  const step = Math.max(40, Math.round(viewport.height / 8))
+
+  for (let top = 0; top <= viewport.height * 1.6; top += step) {
+    // Land the scroll and let ScrollTrigger's scrub apply before sampling. A
+    // fixed delay was not enough under a loaded worker pool.
+    await page.evaluate(async (y) => {
+      window.scrollTo({ top: y, behavior: 'instant' as ScrollBehavior })
+      await new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve)),
+      )
+    }, top)
+    await page.waitForTimeout(60)
+
+    const sample = await page.evaluate(() => {
+      const story = document.querySelector<HTMLElement>('.hero-planify-story')
+      const slot = document.querySelector<HTMLElement>('.hero-scene-slot')
+      const planify = document.querySelector<HTMLElement>('[data-planify-browser]')
+      const inView = (element: Element | null) => {
+        if (!element) return false
+        const bounds = element.getBoundingClientRect()
+        return bounds.bottom > 0 && bounds.top < window.innerHeight && bounds.height > 0
+      }
+
+      // Whichever layer is currently carrying the Hero visual.
+      const ready = slot?.classList.contains('hero-scene-slot--ready') ?? false
+      const active = ready
+        ? document.querySelector<HTMLElement>('.hero-scene-layer')
+        : document.querySelector<HTMLElement>('.hero-fallback')
+
+      return {
+        progress: Number(story?.dataset.transitionProgress ?? 0),
+        mode: story?.dataset.transitionMode ?? '',
+        ready,
+        opacity: active ? Number.parseFloat(getComputedStyle(active).opacity) : 0,
+        slotInView: inView(slot),
+        planifyInView: inView(planify),
+      }
+    })
+
+    // Only meaningful while the Hero still owns the screen.
+    if (!sample.slotInView || sample.planifyInView) continue
+    if (sample.opacity < heroVisualFloor) {
+      violations.push(
+        `${label} scrollY=${top} progress=${sample.progress.toFixed(3)} ` +
+          `${sample.ready ? 'scene-layer' : 'fallback'} opacity=${sample.opacity}`,
+      )
+    }
+  }
+
+  return violations
+}
+
+test('keeps the Hero visual continuous through the simplified transition', async ({ browser }) => {
+  const { context, page } = await openContext(
+    browser,
+    { width: continuityWidths[0], height: 844 },
+    { touch: true },
+  )
+
+  for (const width of continuityWidths) {
+    await page.setViewportSize({ width, height: 844 })
+    await page.goto('/')
+    const story = page.locator('.hero-planify-story')
+    await expect(story).toHaveAttribute('data-transition-module', 'ready')
+    await expect(story, `${width}px should use the simplified path`).toHaveAttribute(
+      'data-transition-mode',
+      'simplified',
+    )
+    // Measure the live-scene path deterministically, as the accepted Phase 4
+    // spec does, rather than racing the deferred canvas mount.
+    await expect(page.locator('.hero-scene-slot')).toHaveAttribute(
+      'data-scene-mode',
+      'enhanced',
+      { timeout: 15_000 },
+    )
+
+    const violations = await heroContinuityViolations(page, `${width}px`)
+    expect(
+      violations,
+      `Hero visual disappeared before Planify arrived: ${JSON.stringify(violations)}`,
+    ).toEqual([])
+  }
+
+  await context.close()
+})
+
+test('keeps the static fallback continuous when WebGL is unavailable', async ({ browser }) => {
+  const { context, page } = await openContext(browser, { width: 390, height: 844 }, { touch: true })
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'WebGLRenderingContext', { configurable: true, value: undefined })
+  })
+  await page.goto('/')
+
+  const slot = page.locator('.hero-scene-slot')
+  await expect(slot).toHaveAttribute('data-scene-tier', 'static')
+  await expect(slot).toHaveAttribute('data-scene-reason', 'webgl-unavailable')
+  await expect(page.locator('.hero-planify-story')).toHaveAttribute(
+    'data-transition-mode',
+    'simplified',
+  )
+
+  const violations = await heroContinuityViolations(page, '390px static')
+  expect(
+    violations,
+    `static fallback disappeared before Planify arrived: ${JSON.stringify(violations)}`,
+  ).toEqual([])
+  await context.close()
+})
+
+test('still releases the cinematic Hero fully into the handoff frame', async ({ browser }) => {
+  const { context, page } = await openContext(browser, { width: 1440, height: 900 })
+  await page.goto('/')
+
+  const story = page.locator('.hero-planify-story')
+  await expect(story).toHaveAttribute('data-transition-module', 'ready')
+  await expect(story).toHaveAttribute('data-transition-mode', 'cinematic')
+  await expect(page.locator('.hero-scene-slot')).toHaveAttribute('data-scene-mode', 'enhanced', {
+    timeout: 15_000,
+  })
+
+  // Park inside the release window and confirm the desktop crossfade still sums
+  // to one: the simplified floor must not have leaked into cinematic.
+  const distance = Number(await story.getAttribute('data-transition-distance'))
+  await page.evaluate(
+    (top) => window.scrollTo({ top, behavior: 'instant' as ScrollBehavior }),
+    Math.round(distance * 0.56),
+  )
+  await settleScroll(page)
+
+  const crossfade = await page.evaluate(() => ({
+    release: Number(
+      getComputedStyle(document.querySelector('.hero-planify-story')!).getPropertyValue(
+        '--planify-source-release',
+      ),
+    ),
+    scene: Number.parseFloat(
+      getComputedStyle(document.querySelector('.hero-scene-layer')!).opacity,
+    ),
+    transfer: Number.parseFloat(
+      getComputedStyle(document.querySelector('[data-planify-handoff-frame]')!).opacity,
+    ),
+  }))
+
+  expect(crossfade.release, 'the release window was not reached').toBeGreaterThan(0.1)
+  expect(crossfade.scene + crossfade.transfer).toBeCloseTo(1, 1)
+  await context.close()
+})
+
 test('opens and closes the mobile menu under touch input', async ({ browser }) => {
   const { context, page } = await openContext(browser, { width: 390, height: 844 }, { touch: true })
   await page.goto('/')

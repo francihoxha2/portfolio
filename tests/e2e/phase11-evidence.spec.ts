@@ -97,6 +97,43 @@ test.describe('device and fallback conditions', () => {
     await context.close()
   })
 
+  /**
+   * Phase 11 corrective evidence: the band that was blank on a real iPhone.
+   * Captured at 390 px inside the release window, where the Hero scene used to
+   * be fully released to opacity 0 while Planify had not yet scrolled in.
+   */
+  test('captures the 390 px mid-transition continuity', async ({ browser }) => {
+    chromeProjectOnly()
+    const { context, page } = await openContext(browser, { width: 390, height: 844 }, { touch: true })
+    await page.goto('/')
+    const story = page.locator('.hero-planify-story')
+    await expect(story).toHaveAttribute('data-transition-mode', 'simplified')
+    await expect(page.locator('.hero-scene-slot')).toHaveAttribute('data-scene-mode', 'enhanced', {
+      timeout: 15_000,
+    })
+
+    // Park in the middle of the formerly blank band.
+    await page.evaluate(async () => {
+      window.scrollTo({ top: 600, behavior: 'instant' as ScrollBehavior })
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+    })
+    await settle(page)
+
+    const state = await page.evaluate(() => {
+      const storyElement = document.querySelector<HTMLElement>('.hero-planify-story')
+      const layer = document.querySelector<HTMLElement>('.hero-scene-layer')
+      return {
+        progress: Number(storyElement?.dataset.transitionProgress ?? 0),
+        sceneLayer: layer ? Number.parseFloat(getComputedStyle(layer).opacity) : 0,
+      }
+    })
+    expect(state.progress).toBeGreaterThan(0.6)
+    expect(state.sceneLayer).toBeGreaterThan(0.25)
+
+    await shoot(page, 'mobile-390-mid-transition.png')
+    await context.close()
+  })
+
   test('captures the short landscape layout', async ({ browser }) => {
     chromeProjectOnly()
     const { context, page } = await openContext(browser, { width: 740, height: 360 }, { touch: true })
